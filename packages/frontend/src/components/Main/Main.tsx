@@ -13,14 +13,13 @@ export const Main: React.FC = () => {
       backgroundColor={config.styles.background.color.main}
     >
       <Stack spacing="4">
-        <ConnectWalletWrapper>
+        <ConnectWalletWrapper variant="outline">
           <Button
             w="full"
-            variant={config.styles.button.variant}
+            variant={"outline"}
             rounded={config.styles.button.rounded}
             size={config.styles.button.size}
             fontSize={config.styles.button.fontSize}
-            color={config.styles.text.color.primary}
           >
             build something valuable
           </Button>

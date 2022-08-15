@@ -1,13 +1,12 @@
 {
   "app": {
-    "name": "NAME",
-    "description": "DESCRIPTION",
+    "name": "NFTHashi",
+    "description": "Crosschain NFT Bridge with Multichain Storage",
     "uri": "http://localhost:3000"
   },
   "links": {
     "github": {
-      "uri": "https://github.com/HackerSamuraiDAO/template",
-      "icon": ""
+      "uri": "https://github.com/nfthashi/2022-Web3Infinity-submission"
     }
   },
   "wallets": {
@@ -24,7 +23,6 @@
   },
   "styles": {
     "button": {
-      "variant": "outline",
       "rounded": "2xl",
       "size": "lg",
       "fontSize": "sm"
@@ -32,13 +30,12 @@
     "text": {
       "color": {
         "primary": "gray.800",
-        "secondary": "gray.600"
+        "secondary": "white"
       }
     },
     "background": {
       "color": {
-        "main": "white",
-        "layout": "white"
+        "main": "white"
       }
     }
   }

@@ -8,10 +8,12 @@ import { Modal } from "../Modal";
 
 export interface ConnectWalletWrapperProps {
   children: React.ReactNode;
+  variant?: "outline";
 }
 
 export const ConnectWalletWrapper: React.FC<ConnectWalletWrapperProps> = ({
   children,
+  variant,
 }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { isWagmiConnected } = useIsWagmiConnected();
@@ -22,7 +24,7 @@ export const ConnectWalletWrapper: React.FC<ConnectWalletWrapperProps> = ({
         <Box>
           <Button
             width="full"
-            variant={config.styles.button.variant}
+            variant={variant}
             rounded={config.styles.button.rounded}
             size={config.styles.button.size}
             fontSize={config.styles.button.fontSize}

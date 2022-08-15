@@ -11,7 +11,7 @@ export interface LayoutProps {
 
 export const Layout: React.FC<LayoutProps> = ({ children }) => {
   return (
-    <Box backgroundColor={config.styles.background.color.layout}>
+    <Box bgGradient="linear(to-r, blue.300, blue.100, blue.300)">
       <Flex minHeight={"100vh"} direction={"column"}>
         <Header />
         <Container flex={1} maxWidth="xl" p="4">

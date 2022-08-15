@@ -24,7 +24,9 @@ export const Modal: React.FC<ModalProps> = ({ children, isOpen, onClose }) => {
           <ModalHeader>
             <ModalCloseButton />
           </ModalHeader>
-          <ModalBody p="8">{children}</ModalBody>
+          <ModalBody px="4" pt="4" pb="8">
+            {children}
+          </ModalBody>
         </ModalContent>
       </_Modal>
     </Box>
