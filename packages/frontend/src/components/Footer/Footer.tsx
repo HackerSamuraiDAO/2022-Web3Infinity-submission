@@ -2,7 +2,7 @@ import { Box, ButtonGroup, IconButton, Stack, Text } from "@chakra-ui/react";
 import React from "react";
 
 import config from "../../../config.json";
-import { LinkKey } from "../../type/confg";
+import { LinkKey } from "../../types/confg";
 import { icons } from "./data";
 
 export const Footer: React.FC = () => {

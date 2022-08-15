@@ -1976,7 +1976,7 @@
     "@ethersproject/logger" "^5.6.0"
     "@ethersproject/properties" "^5.6.0"
 
-"@ethersproject/address@5.6.1", "@ethersproject/address@^5.6.1":
+"@ethersproject/address@5.6.1", "@ethersproject/address@^5.6.0", "@ethersproject/address@^5.6.1":
   version "5.6.1"
   resolved "https://registry.yarnpkg.com/@ethersproject/address/-/address-5.6.1.tgz#ab57818d9aefee919c5721d28cd31fd95eff413d"
   integrity sha512-uOgF0kS5MJv9ZvCz7x6T2EXJSzotiybApn4XlOgoTX0xdtyVIJ7pF+6cGPxiEq/dpBiTfMiw7Yc81JcwhSYA0Q==
@@ -2211,7 +2211,7 @@
     "@ethersproject/constants" "^5.6.1"
     "@ethersproject/logger" "^5.6.0"
 
-"@ethersproject/transactions@5.6.2", "@ethersproject/transactions@^5.6.2":
+"@ethersproject/transactions@5.6.2", "@ethersproject/transactions@^5.6.0", "@ethersproject/transactions@^5.6.2":
   version "5.6.2"
   resolved "https://registry.yarnpkg.com/@ethersproject/transactions/-/transactions-5.6.2.tgz#793a774c01ced9fe7073985bb95a4b4e57a6370b"
   integrity sha512-BuV63IRPHmJvthNkkt9G70Ullx6AcM+SDc+a8Aw/8Yew6YwT51TcBKEp1P4oOQ/bP25I18JJr7rcFRgFtU9B2Q==
@@ -2473,6 +2473,66 @@
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/@metamask/safe-event-emitter/-/safe-event-emitter-2.0.0.tgz#af577b477c683fad17c619a78208cede06f9605c"
   integrity sha512-/kSXhY692qiV1MXu6EeOZvg5nECLclxNXcKCxJ3cXQgYuRymRHpdx/t7JXfsK+JLjwA1e1c1/SBrlQYpusC29Q==
+
+"@moralisweb3/api-utils@^2.0.1":
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/@moralisweb3/api-utils/-/api-utils-2.0.1.tgz#b0719eb2ba6997a0614179200e791a520ca08b9e"
+  integrity sha512-bhqSyn0asNj+OO588jhP5whpZpSJvoLK5vTIoHvumnoY2ODQa8vroOLyVIDvMPCmMcHabfU/waSNHr2rQ6YbaA==
+  dependencies:
+    "@moralisweb3/core" "^2.0.1"
+
+"@moralisweb3/auth@^2.0.1":
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/@moralisweb3/auth/-/auth-2.0.1.tgz#5d0b79745c01c1d091c0c575107cae7d121c73d4"
+  integrity sha512-Sq0e5wp1bnwJ97BToDe9DysWYc2Me17uBNwhfohZ82S14ir/R+RfVTJ0JRLvuhD6N0zL5Nh62AONQMWuNJiVYQ==
+  dependencies:
+    "@moralisweb3/api-utils" "^2.0.1"
+    "@moralisweb3/core" "^2.0.1"
+    "@moralisweb3/evm-utils" "^2.0.1"
+
+"@moralisweb3/core@^2.0.1":
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/@moralisweb3/core/-/core-2.0.1.tgz#a9f047d3b3aacc165cdfcd69e0c97ec500053c82"
+  integrity sha512-/bYdAytUbNbHnWVm6NAQGGKFfm8UoIBHlqvfMT1SBVnyLI8Y2Xzv7C4N6csBtWlIxBQ7W0ho8nEu6xlfzptXpw==
+  dependencies:
+    "@xstate/fsm" "^2.0.0"
+    axios "^0.27.2"
+    eventemitter3 "^4.0.7"
+    typed-emitter "^2.1.0"
+
+"@moralisweb3/evm-api@^2.0.1":
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/@moralisweb3/evm-api/-/evm-api-2.0.1.tgz#63a00893c787384e85558b68a240af9e7da6870c"
+  integrity sha512-waCwZ9tET0uJdRnUG2cWBauHmi85wnDALH8qdh23xwo6snSjxMYsV+LvtzQLe0jhShwyTAHvHgAuj5snpsKd6A==
+  dependencies:
+    "@moralisweb3/api-utils" "^2.0.1"
+    "@moralisweb3/core" "^2.0.1"
+    "@moralisweb3/evm-utils" "^2.0.1"
+
+"@moralisweb3/evm-utils@^2.0.1":
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/@moralisweb3/evm-utils/-/evm-utils-2.0.1.tgz#cb229c47a7ae8d6e46bb72f58d8f5266ed72ce4b"
+  integrity sha512-KxnUxZiwOgRC5UnJTB4jUV945a78JZ0Y0BilZ5sQ2m9uyOHxp3VlOs1E63EHCeXM5Su1/BOlZmjr7i2hKzDEwQ==
+  dependencies:
+    "@ethersproject/address" "^5.6.0"
+    "@ethersproject/transactions" "^5.6.0"
+    "@moralisweb3/core" "^2.0.1"
+
+"@moralisweb3/sol-api@^2.0.1":
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/@moralisweb3/sol-api/-/sol-api-2.0.1.tgz#32bca31fba4ce87d19d3c4dc91caace59f997144"
+  integrity sha512-Jcv64FgdIDhFBQUyecE2xeAjEJbhG8xdSi30+9u34CxJZG4U1GtqQUKJCXjXeaBGpxyE5sReFeBI3ZA2pNK5og==
+  dependencies:
+    "@moralisweb3/api-utils" "^2.0.1"
+    "@moralisweb3/core" "^2.0.1"
+    "@moralisweb3/sol-utils" "^2.0.1"
+
+"@moralisweb3/sol-utils@^2.0.1":
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/@moralisweb3/sol-utils/-/sol-utils-2.0.1.tgz#853fb050610e0192a6509481186a591c74dba3a8"
+  integrity sha512-vcvq0/O/4qk88rDgZNLFdRIHVw+mgJJN5l7K4eqHoY/p21Ruwp7lLbBEvO2htuTTXB6w0glPUTvd998r6scjLA==
+  dependencies:
+    "@moralisweb3/core" "^2.0.1"
 
 "@motionone/animation@^10.12.0":
   version "10.13.2"
@@ -4540,6 +4600,11 @@
     "@webassemblyjs/ast" "1.9.0"
     "@webassemblyjs/wast-parser" "1.9.0"
     "@xtuc/long" "4.2.2"
+
+"@xstate/fsm@^2.0.0":
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@xstate/fsm/-/fsm-2.0.0.tgz#221db16b606df3f4675f5be6058b633ec4b8b44a"
+  integrity sha512-p/zcvBMoU2ap5byMefLkR+AM+Eh99CU/SDEQeccgKlmFNOMDwphaRGqdk+emvel/SaGZ7Rf9sDvzAplLzLdEVQ==
 
 "@xtuc/ieee754@^1.2.0":
   version "1.2.0"
@@ -9737,6 +9802,18 @@ mkdirp@^1.0.3, mkdirp@^1.0.4:
   resolved "https://registry.yarnpkg.com/mkdirp/-/mkdirp-1.0.4.tgz#3eb5ed62622756d79a5f0e2a221dfebad75c2f7e"
   integrity sha512-vVqVZQyf3WLx2Shd0qJ9xuvqgAyKPLAiqITEtqW0oIUjzo3PePDd6fW9iFz30ef7Ysp/oiWqbhszeGWW2T6Gzw==
 
+moralis@^2.0.1:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/moralis/-/moralis-2.0.1.tgz#d31d952807e712428476f55d9ac4f36b45187420"
+  integrity sha512-mjEB7le5K9OyR11ypyyEVHsaHIqAXXOmgKSp/l5V10dQY2Eiq9/gQv/Jj4i4S1z4Xs7kAJD6NibuAC/AWLN8bQ==
+  dependencies:
+    "@moralisweb3/api-utils" "^2.0.1"
+    "@moralisweb3/auth" "^2.0.1"
+    "@moralisweb3/core" "^2.0.1"
+    "@moralisweb3/evm-api" "^2.0.1"
+    "@moralisweb3/evm-utils" "^2.0.1"
+    "@moralisweb3/sol-api" "^2.0.1"
+
 move-concurrently@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/move-concurrently/-/move-concurrently-1.0.1.tgz#be2c005fda32e0b29af1f05d7c4b33214c701f92"
@@ -11552,6 +11629,13 @@ rxjs@^6.6.3:
   dependencies:
     tslib "^1.9.0"
 
+rxjs@^7.5.2:
+  version "7.5.6"
+  resolved "https://registry.yarnpkg.com/rxjs/-/rxjs-7.5.6.tgz#0446577557862afd6903517ce7cae79ecb9662bc"
+  integrity sha512-dnyv2/YsXhnm461G+R/Pe5bWP41Nm6LBXEYWI6eiFP4fiwx6WRI/CD0zbdVAudd9xwLEF2IDcKXLHit0FYjUzw==
+  dependencies:
+    tslib "^2.1.0"
+
 safe-buffer@5.1.1:
   version "5.1.1"
   resolved "https://registry.yarnpkg.com/safe-buffer/-/safe-buffer-5.1.1.tgz#893312af69b2123def71f57889001671eeb2c853"
@@ -12609,6 +12693,13 @@ type-is@~1.6.18:
   dependencies:
     media-typer "0.3.0"
     mime-types "~2.1.24"
+
+typed-emitter@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/typed-emitter/-/typed-emitter-2.1.0.tgz#ca78e3d8ef1476f228f548d62e04e3d4d3fd77fb"
+  integrity sha512-g/KzbYKbH5C2vPkaXGu8DJlHrGKHLsM25Zg9WuC9pMGfuvT+X25tZQWo5fK1BjBm8+UrVE9LDCvaY0CQk+fXDA==
+  optionalDependencies:
+    rxjs "^7.5.2"
 
 typedarray-to-buffer@3.1.5, typedarray-to-buffer@^3.1.5:
   version "3.1.5"
