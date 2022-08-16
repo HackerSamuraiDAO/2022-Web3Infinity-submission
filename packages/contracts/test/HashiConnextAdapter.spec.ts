@@ -3,7 +3,14 @@ import { expect } from "chai";
 import { ethers } from "hardhat";
 
 import { ADDRESS_1, ADDRESS_2 } from "../lib/constant";
-import { MockConnextHandler, MockExecutor, MockExecutor__factory, MockHashiConnextAdapter } from "../typechain-types";
+import {
+  MockConnextHandler,
+  MockConnextHandler__factory,
+  MockExecutor,
+  MockExecutor__factory,
+  MockHashiConnextAdapter,
+  MockHashiConnextAdapter__factory,
+} from "../../shared/types/typechain";
 
 describe("Unit Test for HashiConnextAdapter", function () {
   let malicious: SignerWithAddress;
@@ -21,14 +28,16 @@ describe("Unit Test for HashiConnextAdapter", function () {
 
   beforeEach(async function () {
     [, malicious] = await ethers.getSigners();
-    const MockConnextHandler = await ethers.getContractFactory("MockConnextHandler");
+    const MockConnextHandler = <MockConnextHandler__factory>await ethers.getContractFactory("MockConnextHandler");
     mockConnextHandler = await MockConnextHandler.deploy();
-    MockExecutor = await ethers.getContractFactory("MockExecutor");
+    MockExecutor = <MockExecutor__factory>await ethers.getContractFactory("MockExecutor");
     mockExecutor = await MockExecutor.deploy();
     mockExecutor.setOrigin(opponentDomain);
     mockExecutor.setOriginSender(opponentContract);
     await mockConnextHandler.setExecutor(mockExecutor.address);
-    const MockHashiConnextAdapter = await ethers.getContractFactory("MockHashiConnextAdapter");
+    const MockHashiConnextAdapter = <MockHashiConnextAdapter__factory>(
+      await ethers.getContractFactory("MockHashiConnextAdapter")
+    );
     mockHashiConnextAdapter = await MockHashiConnextAdapter.deploy(selfDomain, mockConnextHandler.address);
   });
 

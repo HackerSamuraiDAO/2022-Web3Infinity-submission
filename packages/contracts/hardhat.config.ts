@@ -38,6 +38,12 @@ const config: HardhatUserConfig = {
       accounts,
     },
   },
+  paths: {
+    artifacts: "../shared/artifacts",
+  },
+  typechain: {
+    outDir: "../shared/types/typechain",
+  },
 };
 
 export default config;
