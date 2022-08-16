@@ -7,6 +7,7 @@ import "@openzeppelin/contracts-upgradeable/proxy/ClonesUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/utils/AddressUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/utils/introspection/ERC165Upgradeable.sol";
 
+// import "./HashiLayerZeroAdapter.sol";
 import "./HashiConnextAdapter.sol";
 import "./interfaces/IWrappedHashi721.sol";
 

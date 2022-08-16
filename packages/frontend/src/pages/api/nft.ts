@@ -1,13 +1,10 @@
 import { ethers } from "ethers";
 import type { NextApiRequest, NextApiResponse } from "next";
 
+import { isChainId } from "../../../../shared/types/network";
 import { getNFTs } from "../../lib/moralis";
-import { isChainId } from "../../types/network";
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   console.log("called");
   const { chainId, address } = req.body;
   console.log(chainId, address);

@@ -49,8 +49,6 @@ describe("Unit Test for Hashi721Bridge", function () {
     const Hashi721Bridge = <Hashi721Bridge__factory>await ethers.getContractFactory("Hashi721Bridge");
     hashi721Bridge = await Hashi721Bridge.deploy();
     await hashi721Bridge.initialize(selfDomain, mockConnextHandler.address, wrappedHashi721.address);
-
-    await hashi721Bridge.initialize(selfDomain, mockConnextHandler.address, wrappedHashi721.address);
     const MockNFT = <MockNFT__factory>await ethers.getContractFactory("MockNFT");
     mockNFT = await MockNFT.deploy(baseTokenURL);
     await mockNFT.mint(signer.address);

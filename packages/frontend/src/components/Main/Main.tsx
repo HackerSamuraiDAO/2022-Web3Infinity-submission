@@ -12,11 +12,16 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import axios from "axios";
+import { ethers } from "ethers";
 import React from "react";
 import { VscArrowSwap } from "react-icons/vsc";
-import { useAccount } from "wagmi";
+import { erc721ABI, useAccount, useNetwork, useSigner } from "wagmi";
 
+import Hashi721BridgeArtifact from "../../../../shared/artifacts/contracts/Hashi721Bridge.sol/Hashi721Bridge.json";
+import { BRIDGE_VERSION } from "../../../../shared/constants";
+import networks from "../../../../shared/networks.json";
 import { ChainId, isChainId } from "../../../../shared/types/network";
+import { ERC721, Hashi721Bridge } from "../../../../shared/types/typechain";
 import config from "../../../config.json";
 import { NFT as NFTType } from "../../types/nft";
 import { ConnectWalletWrapper } from "../ConnectWalletWrapper";
@@ -35,9 +40,54 @@ export const Main: React.FC = () => {
 
   const [isLoading, setIsLoading] = React.useState(false);
   const { address } = useAccount();
+  const { data: signer } = useSigner();
+  const { chain } = useNetwork();
 
-  const bridge = () => {
-    console.log("bridge");
+  const bridge = async () => {
+    if (!selectedNFT || !address || !signer || !chain) {
+      return;
+    }
+    console.log("processing bridge...");
+    console.log("checking network start...");
+    const sorceNetwork = networks[sourceChainId];
+    const targetNetwork = networks[targetChainId];
+    const connectedChainId = chain.id.toString();
+    if (connectedChainId !== sourceChainId) {
+      console.log("wrong network detected");
+      alert(`Please conncet to ${sorceNetwork.name}`);
+      return;
+    }
+    console.log("checking network end");
+    const nftContract = new ethers.Contract(selectedNFT.contractAddress, erc721ABI, signer) as ERC721;
+    console.log("checking approval start...");
+    const resolved = await Promise.all([
+      nftContract.getApproved(selectedNFT.tokenId).catch(() => false),
+      nftContract.isApprovedForAll(address, sorceNetwork.contracts.bridge).catch(() => false),
+    ]);
+    const approved = resolved.some((v) => v === true);
+    console.log("approved", approved);
+    const bridgeContractAddress = sorceNetwork.contracts.bridge;
+    if (!approved) {
+      console.log("sending approve tx...");
+      const tx = await nftContract.setApprovalForAll(bridgeContractAddress, true);
+
+      console.log("approve tx send", tx.hash);
+      console.log("waiting for tx confirmation");
+      await tx.wait();
+      console.log("approved");
+    }
+    console.log("checking approval end");
+    const bridge = new ethers.Contract(bridgeContractAddress, Hashi721BridgeArtifact.abi, signer) as Hashi721Bridge;
+    console.log("start bridge tx...");
+    await bridge.xSend(
+      selectedNFT.contractAddress,
+      address,
+      address,
+      selectedNFT.tokenId,
+      targetNetwork.domainId,
+      BRIDGE_VERSION,
+      true
+    );
   };
 
   const swapChainId = () => {

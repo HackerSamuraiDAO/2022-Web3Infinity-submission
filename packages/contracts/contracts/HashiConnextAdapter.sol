@@ -104,7 +104,7 @@ contract HashiConnextAdapter is OwnableUpgradeable, ERC165Upgradeable {
       destinationDomain: destinationdomain,
       agent: msg.sender,
       recovery: msg.sender,
-      forceSlow: false,
+      forceSlow: true,
       receiveLocal: false,
       callback: address(0),
       callbackFee: 0,

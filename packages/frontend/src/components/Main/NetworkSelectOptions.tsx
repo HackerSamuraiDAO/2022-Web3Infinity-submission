@@ -1,9 +1,9 @@
-import config from "../../../../shared/networks.json";
+import networks from "../../../../shared/networks.json";
 
 export const NetworkSelectOptions: React.FC = () => {
   return (
     <>
-      {Object.entries(config).map(([key, { name }], i) => {
+      {Object.entries(networks).map(([key, { name }], i) => {
         return (
           <option key={i} value={key}>
             {name}
