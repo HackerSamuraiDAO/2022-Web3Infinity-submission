@@ -107,7 +107,7 @@ export const Main: React.FC = () => {
       <Stack spacing="4">
         <HStack justify={"space-between"} align="center">
           <VStack w="full">
-            <Text fontSize="sm" fontWeight={"bold"} textAlign="center">
+            <Text fontSize="xs" fontWeight={"bold"} textAlign="center">
               Source ChainId
             </Text>
             <Select
@@ -115,6 +115,7 @@ export const Main: React.FC = () => {
               onChange={handleSourceChainIdChange}
               value={sourceChainId}
               rounded={"2xl"}
+              size="lg"
               fontSize={"sm"}
             >
               <NetworkSelectOptions />
@@ -131,7 +132,7 @@ export const Main: React.FC = () => {
             variant={"outline"}
           />
           <VStack w="full">
-            <Text fontSize="sm" fontWeight={"bold"} textAlign="center">
+            <Text fontSize="xs" fontWeight={"bold"} textAlign="center">
               Target ChainId
             </Text>
             <Select
@@ -139,6 +140,7 @@ export const Main: React.FC = () => {
               onChange={handleTargetChainIdChange}
               value={targetChainId}
               rounded={"2xl"}
+              size="lg"
               fontSize={"sm"}
             >
               <NetworkSelectOptions />
