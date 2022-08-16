@@ -16,8 +16,8 @@ import React from "react";
 import { VscArrowSwap } from "react-icons/vsc";
 import { useAccount } from "wagmi";
 
+import { ChainId, isChainId } from "../../../../shared/types/network";
 import config from "../../../config.json";
-import { ChainId, isChainId } from "../../types/network";
 import { NFT as NFTType } from "../../types/nft";
 import { ConnectWalletWrapper } from "../ConnectWalletWrapper";
 import { Modal } from "../Modal";
@@ -64,9 +64,7 @@ export const Main: React.FC = () => {
     setIsLoading(false);
   };
 
-  const handleSourceChainIdChange = async (
-    e: React.ChangeEvent<HTMLSelectElement>
-  ) => {
+  const handleSourceChainIdChange = async (e: React.ChangeEvent<HTMLSelectElement>) => {
     const inputValue = e.target.value;
     if (!isChainId(inputValue)) {
       return;
@@ -78,9 +76,7 @@ export const Main: React.FC = () => {
     setSourceChainId(inputValue);
   };
 
-  const handleTargetChainIdChange = (
-    e: React.ChangeEvent<HTMLSelectElement>
-  ) => {
+  const handleTargetChainIdChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const inputValue = e.target.value;
     if (!isChainId(inputValue)) {
       return;
@@ -98,16 +94,11 @@ export const Main: React.FC = () => {
   };
 
   return (
-    <Box
-      boxShadow={"base"}
-      borderRadius="2xl"
-      p="4"
-      backgroundColor={config.styles.background.color.main}
-    >
+    <Box boxShadow={"base"} borderRadius="2xl" p="4" backgroundColor={config.styles.background.color.main}>
       <Stack spacing="4">
         <HStack justify={"space-between"} align="center">
           <VStack w="full">
-            <Text fontSize="xs" fontWeight={"bold"} textAlign="center">
+            <Text fontSize="sm" fontWeight={"bold"} textAlign="center" color={config.styles.text.color.primary}>
               Source ChainId
             </Text>
             <Select
@@ -132,7 +123,7 @@ export const Main: React.FC = () => {
             variant={"outline"}
           />
           <VStack w="full">
-            <Text fontSize="xs" fontWeight={"bold"} textAlign="center">
+            <Text fontSize="sm" fontWeight={"bold"} textAlign="center" color={config.styles.text.color.primary}>
               Target ChainId
             </Text>
             <Select
@@ -184,13 +175,7 @@ export const Main: React.FC = () => {
             <Flex justify={"center"}>
               <SimpleGrid columns={2} gap={8}>
                 {nfts.map((nft, i) => {
-                  return (
-                    <NFT
-                      nft={nft}
-                      key={i}
-                      onClick={() => handleNFTSelected(i)}
-                    />
-                  );
+                  return <NFT nft={nft} key={i} onClick={() => handleNFTSelected(i)} />;
                 })}
               </SimpleGrid>
             </Flex>

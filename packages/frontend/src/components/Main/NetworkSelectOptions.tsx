@@ -1,4 +1,4 @@
-import config from "../../../network.json";
+import config from "../../../../shared/networks.json";
 
 export const NetworkSelectOptions: React.FC = () => {
   return (

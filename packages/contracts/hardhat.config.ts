@@ -5,13 +5,13 @@ import "@openzeppelin/hardhat-upgrades";
 
 import * as dotenv from "dotenv";
 
-import "./tasks/all-deploy";
-import "./tasks/all-register";
-import "./tasks/bridge-deploy";
-import "./tasks/bridge-register";
-import "./tasks/wrapped-nft-impl-deploy";
+import "./tasks/deploy";
+import "./tasks/register";
+import "./tasks/sub-bridge-deploy";
+import "./tasks/sub-bridge-register";
+import "./tasks/sub-wrapped-nft-impl-deploy";
 
-import networks from "./networks.json";
+import networks from "../shared/networks.json";
 
 dotenv.config();
 

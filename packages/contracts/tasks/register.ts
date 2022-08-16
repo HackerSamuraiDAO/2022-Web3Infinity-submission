@@ -1,13 +1,11 @@
-import fs from "fs";
 import { task } from "hardhat/config";
-import path from "path";
 
-import networks from "../networks.json";
-import { isChainId } from "../types/network";
+import networks from "../../shared/networks.json";
+import { isChainId } from "../../shared/types/network";
 
 const domainVersion = "0";
 
-task("all-register", "integration register").setAction(async (_, { network, run }) => {
+task("register", "integration register").setAction(async (_, { network, run }) => {
   const { config } = network;
   const chainId = config.chainId?.toString();
   if (!isChainId(chainId)) {
@@ -25,7 +23,7 @@ task("all-register", "integration register").setAction(async (_, { network, run 
       const { domainId: opponentDomainNum, contracts } = value;
       const { bridge: opponentContractAddress } = contracts;
       const opponentDomain = opponentDomainNum.toString();
-      await run("bridge-register", { selfContractAddress, opponentDomain, domainVersion, opponentContractAddress });
+      await run("sub-bridge-register", { selfContractAddress, opponentDomain, domainVersion, opponentContractAddress });
     }
   }
   console.log("DONE");

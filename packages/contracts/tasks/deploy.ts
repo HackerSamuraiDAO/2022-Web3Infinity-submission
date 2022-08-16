@@ -2,10 +2,10 @@ import fs from "fs";
 import { task } from "hardhat/config";
 import path from "path";
 
-import networks from "../networks.json";
-import { isChainId } from "../types/network";
+import networks from "../../shared/networks.json";
+import { isChainId } from "../../shared/types/network";
 
-task("all-deploy", "deploy").setAction(async (_, { network, run }) => {
+task("deploy", "deploy").setAction(async (_, { network, run }) => {
   const { config } = network;
   const chainId = config.chainId?.toString();
   if (!isChainId(chainId)) {
@@ -15,14 +15,14 @@ task("all-deploy", "deploy").setAction(async (_, { network, run }) => {
   const { domainId, contracts } = networks[chainId];
   const { connext } = contracts;
   const selfDomain = domainId.toString();
-  const wrappedNftImplementation = await run("wrapped-nft-impl-deploy");
-  const bridge = await run("bridge-deploy", {
+  const wrappedNftImplementation = await run("sub-wrapped-nft-impl-deploy");
+  const bridge = await run("sub-bridge-deploy", {
     selfDomain,
     connext,
     wrappedNftImplementation,
   });
   networks[chainId].contracts.wrappedNftImplementation = wrappedNftImplementation;
   networks[chainId].contracts.bridge = bridge;
-  fs.writeFileSync(path.join(__dirname, "../networks.json"), JSON.stringify(networks));
+  fs.writeFileSync(path.join(__dirname, "../../shared/networks.json"), JSON.stringify(networks));
   console.log("DONE");
 });

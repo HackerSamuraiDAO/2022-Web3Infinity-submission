@@ -1,6 +1,6 @@
 import { task } from "hardhat/config";
 
-task("bridge-deploy", "cmd deploy bridge")
+task("sub-bridge-deploy", "cmd deploy bridge")
   .addParam("selfDomain", "self domain")
   .addParam("connext", "connext")
   .addParam("wrappedNftImplementation", "nft implementation")

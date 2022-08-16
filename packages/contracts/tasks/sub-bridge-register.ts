@@ -1,6 +1,6 @@
 import { task } from "hardhat/config";
 
-task("bridge-register", "cmd deploy bridge")
+task("sub-bridge-register", "cmd deploy bridge")
   .addParam("selfContractAddress", "self contract address")
   .addParam("opponentDomain", "opponent domain")
   .addParam("domainVersion", "version")
