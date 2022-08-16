@@ -15,7 +15,7 @@ import "./interfaces/IWrappedHashi721.sol";
 import "hardhat/console.sol";
 
 contract Hashi721Bridge is ERC165Upgradeable, HashiConnextAdapter {
-  mapping(address => mapping(uint256=>uint32)) private _destinations;
+  mapping(address => mapping(uint256 => uint32)) private _destinations;
   mapping(address => address) private _contracts;
   mapping(address => uint32) private _domains;
 
@@ -72,7 +72,7 @@ contract Hashi721Bridge is ERC165Upgradeable, HashiConnextAdapter {
     uint256 tokenId,
     uint32 birthChainDomain,
     string memory tokenURI
-  ) public onlyExecutor() {
+  ) public onlyExecutor {
     uint32 selfDomain = getSelfDomain();
     if (birthChainDomain == selfDomain) {
       uint32 domain = _getOrigin();

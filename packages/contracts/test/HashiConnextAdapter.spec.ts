@@ -1,8 +1,6 @@
-import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { expect } from "chai";
 import { ethers } from "hardhat";
 
-import { ADDRESS_1, ADDRESS_2 } from "../lib/constant";
 import {
   MockConnextHandler,
   MockConnextHandler__factory,
@@ -11,10 +9,9 @@ import {
   MockHashiConnextAdapter,
   MockHashiConnextAdapter__factory,
 } from "../../shared/types/typechain";
+import { ADDRESS_1 } from "../lib/constant";
 
 describe("Unit Test for HashiConnextAdapter", function () {
-  let malicious: SignerWithAddress;
-
   let MockExecutor: MockExecutor__factory;
   let mockExecutor: MockExecutor;
   let mockConnextHandler: MockConnextHandler;
@@ -26,7 +23,6 @@ describe("Unit Test for HashiConnextAdapter", function () {
   const opponentContract = ADDRESS_1;
 
   beforeEach(async function () {
-    [, malicious] = await ethers.getSigners();
     const MockConnextHandler = <MockConnextHandler__factory>await ethers.getContractFactory("MockConnextHandler");
     mockConnextHandler = await MockConnextHandler.deploy();
     MockExecutor = <MockExecutor__factory>await ethers.getContractFactory("MockExecutor");

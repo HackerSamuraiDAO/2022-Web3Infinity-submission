@@ -1,15 +1,13 @@
-import { HardhatUserConfig } from "hardhat/config";
-
 import "@nomicfoundation/hardhat-toolbox";
 import "@openzeppelin/hardhat-upgrades";
-
-import * as dotenv from "dotenv";
-
 import "./tasks/deploy";
 import "./tasks/register";
 import "./tasks/sub-bridge-deploy";
 import "./tasks/sub-bridge-register";
 import "./tasks/sub-wrapped-nft-impl-deploy";
+
+import * as dotenv from "dotenv";
+import { HardhatUserConfig } from "hardhat/config";
 
 import networks from "../shared/networks.json";
 

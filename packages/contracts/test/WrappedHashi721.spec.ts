@@ -2,8 +2,8 @@ import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { expect } from "chai";
 import { ethers } from "hardhat";
 
-import { NULL_ADDRESS } from "../lib/constant";
 import { WrappedHashi721, WrappedHashi721__factory } from "../../shared/types/typechain";
+import { NULL_ADDRESS } from "../lib/constant";
 
 describe("Unit Test for WrappedHashi721", function () {
   let signer: SignerWithAddress;
