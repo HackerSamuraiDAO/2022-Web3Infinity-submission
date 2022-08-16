@@ -20,10 +20,11 @@ contract HashiConnextAdapter is OwnableUpgradeable, ERC165Upgradeable {
 
   modifier onlyExecutor(uint32 version) {
     require(msg.sender == _executor, "HashiConnextAdapter: sender invalid");
-    uint32 domain = IExecutor(msg.sender).origin();
+    uint32 domain = _getOrigin();
+    address originSender = _getOriginSender();
     address expectedBridgeContract = getBridgeContract(domain, version);
     require(
-      IExecutor(msg.sender).originSender() == expectedBridgeContract,
+      originSender == expectedBridgeContract,
       "HashiConnextAdapter: origin sender invalid"
     );
     _;
@@ -55,8 +56,8 @@ contract HashiConnextAdapter is OwnableUpgradeable, ERC165Upgradeable {
     return _selfDomain;
   }
 
-  function getBridgeContract(uint32 domainId, uint32 version) public view returns (address){
-    bytes32 bridgeKey = _getBridgeKey(domainId, version);
+  function getBridgeContract(uint32 domain, uint32 version) public view returns (address){
+    bytes32 bridgeKey = _getBridgeKey(domain, version);
     return _bridgeContracts[bridgeKey];
   }
 
@@ -82,18 +83,26 @@ contract HashiConnextAdapter is OwnableUpgradeable, ERC165Upgradeable {
     _transactingAssetId = transactingAssetId;
   }
 
+  function _getOrigin() internal returns (uint32) {
+    return IExecutor(msg.sender).origin();
+  }
+
+  function _getOriginSender() internal returns (address) {
+    return IExecutor(msg.sender).originSender();
+  }
+
   function _xcall(
-    uint32 destinationDomainId,
+    uint32 destinationdomain,
     uint32 version,
     bytes memory callData
   ) internal {
-    address destinationContract = getBridgeContract(destinationDomainId, version);
+    address destinationContract = getBridgeContract(destinationdomain, version);
     require(destinationContract != address(0x0), "HashiConnextAdapter: invalid bridge");
     CallParams memory callParams = CallParams({
       to: destinationContract,
       callData: callData,
       originDomain: _selfDomain,
-      destinationDomain: destinationDomainId,
+      destinationDomain: destinationdomain,
       agent: msg.sender,
       recovery: msg.sender,
       forceSlow: true,
@@ -107,7 +116,7 @@ contract HashiConnextAdapter is OwnableUpgradeable, ERC165Upgradeable {
     IConnextHandler(_connext).xcall(xcallArgs);
   }
 
-  function _getBridgeKey(uint32 domainId, uint32 version) internal pure returns(bytes32){
-    return keccak256(abi.encodePacked(domainId, version));
+  function _getBridgeKey(uint32 domain, uint32 version) internal pure returns(bytes32){
+    return keccak256(abi.encodePacked(domain, version));
   }
 }

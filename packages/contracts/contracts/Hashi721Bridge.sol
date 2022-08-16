@@ -47,7 +47,8 @@ contract Hashi721Bridge is ERC165Upgradeable, HashiConnextAdapter {
       birthChainNFTContractAddress = processingNFTContractAddress;
       birthChainDomain = getSelfDomain();
       IERC721Upgradeable(birthChainNFTContractAddress).transferFrom(from, address(this), tokenId);
-      // _destiations[processingNFTContractAddress][tokenId] = bridgeKey;
+      bytes32 bridgeKey = _getBridgeKey(destinationDomain, version);
+      _bridgeKeys[processingNFTContractAddress][tokenId] = bridgeKey;
     } else {
       birthChainNFTContractAddress = _contracts[processingNFTContractAddress];
       birthChainDomain = _domains[processingNFTContractAddress];
@@ -76,6 +77,9 @@ contract Hashi721Bridge is ERC165Upgradeable, HashiConnextAdapter {
   ) public onlyExecutor(version) {
     uint32 selfDomain = getSelfDomain();
     if (birthChainDomain == selfDomain) {
+      uint32 domain = _getOrigin();
+      bytes32 bridgeKey = _getBridgeKey(domain, version);
+      require(_bridgeKeys[birthChainNFTContractAddress][tokenId] == bridgeKey, "Hashi721Bridge: invalid bridge");
       IERC721Upgradeable(birthChainNFTContractAddress).safeTransferFrom(address(this), to, tokenId);
     } else {
       bytes32 salt = keccak256(abi.encodePacked(birthChainDomain, birthChainNFTContractAddress));
@@ -92,10 +96,6 @@ contract Hashi721Bridge is ERC165Upgradeable, HashiConnextAdapter {
       }
       IWrappedHashi721(processingNFTContractAddress).mint(to, tokenId, tokenURI);
     }
-  }
-
-  function isWrappedNFT(address nftContractAddress) public view returns (bool) {
-    return _contracts[nftContractAddress] != address(0x0) && _domains[nftContractAddress] != 0;
   }
 
   // solhint-disable-next-line func-name-mixedcase
