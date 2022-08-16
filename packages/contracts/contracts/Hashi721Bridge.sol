@@ -15,9 +15,9 @@ import "./interfaces/IWrappedHashi721.sol";
 import "hardhat/console.sol";
 
 contract Hashi721Bridge is ERC165Upgradeable, HashiConnextAdapter {
+  mapping(address => mapping(uint256=>uint32)) private _destinations;
   mapping(address => address) private _contracts;
   mapping(address => uint32) private _domains;
-  mapping(address => mapping(uint256 => bytes32)) private _bridgeKeys;
 
   address private _nftImplementation;
 
@@ -35,11 +35,9 @@ contract Hashi721Bridge is ERC165Upgradeable, HashiConnextAdapter {
     address to,
     uint256 tokenId,
     uint32 destinationDomain,
-    uint32 version,
     bool isTokenURIIncluded
   ) public {
     _validateAuthorization(processingNFTContractAddress, from, tokenId);
-    bytes32 bridgeKey = _getBridgeKey(destinationDomain, version);
     address birthChainNFTContractAddress;
     uint32 birthChainDomain;
     string memory tokenURI;
@@ -50,8 +48,7 @@ contract Hashi721Bridge is ERC165Upgradeable, HashiConnextAdapter {
       birthChainNFTContractAddress = processingNFTContractAddress;
       birthChainDomain = getSelfDomain();
       IERC721Upgradeable(birthChainNFTContractAddress).transferFrom(from, address(this), tokenId);
-      bytes32 bridgeKey = _getBridgeKey(destinationDomain, version);
-      _bridgeKeys[processingNFTContractAddress][tokenId] = bridgeKey;
+      _destinations[processingNFTContractAddress][tokenId] = destinationDomain;
     } else {
       birthChainNFTContractAddress = _contracts[processingNFTContractAddress];
       birthChainDomain = _domains[processingNFTContractAddress];
@@ -64,10 +61,9 @@ contract Hashi721Bridge is ERC165Upgradeable, HashiConnextAdapter {
       to,
       tokenId,
       birthChainDomain,
-      version,
       tokenURI
     );
-    _xcall(destinationDomain, version, callData);
+    _xcall(destinationDomain, callData);
   }
 
   function xReceive(
@@ -75,16 +71,14 @@ contract Hashi721Bridge is ERC165Upgradeable, HashiConnextAdapter {
     address to,
     uint256 tokenId,
     uint32 birthChainDomain,
-    uint32 version,
     string memory tokenURI
-  ) public onlyExecutor(version) {
+  ) public onlyExecutor() {
     uint32 selfDomain = getSelfDomain();
     if (birthChainDomain == selfDomain) {
       uint32 domain = _getOrigin();
-      bytes32 bridgeKey = _getBridgeKey(domain, version);
-      require(_bridgeKeys[birthChainNFTContractAddress][tokenId] == bridgeKey, "Hashi721Bridge: invalid bridge");
+      require(_destinations[birthChainNFTContractAddress][tokenId] == domain, "Hashi721Bridge: invalid bridge");
       IERC721Upgradeable(birthChainNFTContractAddress).safeTransferFrom(address(this), to, tokenId);
-      delete _bridgeKeys[birthChainNFTContractAddress][tokenId];
+      delete _destinations[birthChainNFTContractAddress][tokenId];
     } else {
       bytes32 salt = keccak256(abi.encodePacked(birthChainDomain, birthChainNFTContractAddress));
       address processingNFTContractAddress = ClonesUpgradeable.predictDeterministicAddress(
@@ -100,6 +94,10 @@ contract Hashi721Bridge is ERC165Upgradeable, HashiConnextAdapter {
       }
       IWrappedHashi721(processingNFTContractAddress).mint(to, tokenId, tokenURI);
     }
+  }
+
+  function getDestination(address contractAddress, uint256 tokenId) public view returns (uint32) {
+    return _destinations[contractAddress][tokenId];
   }
 
   // solhint-disable-next-line func-name-mixedcase

@@ -12,19 +12,19 @@ import "@connext/nxtp-contracts/contracts/core/connext/interfaces/IConnextHandle
 import "hardhat/console.sol";
 
 contract HashiConnextAdapter is OwnableUpgradeable, ERC165Upgradeable {
-  mapping(bytes32 => address) private _bridgeContracts;
+  mapping(uint32 => address) private _bridgeContracts;
 
   address private _connext;
   address private _executor;
   uint32 private _selfDomain;
 
-  event BridgeSet(uint32 domain, uint32 version, address bridgeContract);
+  event BridgeSet(uint32 domain, address bridgeContract);
 
-  modifier onlyExecutor(uint32 version) {
+  modifier onlyExecutor() {
     require(msg.sender == _executor, "HashiConnextAdapter: sender invalid");
     uint32 domain = _getOrigin();
     address originSender = _getOriginSender();
-    address expectedBridgeContract = getBridgeContract(domain, version);
+    address expectedBridgeContract = getBridgeContract(domain);
     require(
       originSender == expectedBridgeContract,
       "HashiConnextAdapter: origin sender invalid"
@@ -34,16 +34,14 @@ contract HashiConnextAdapter is OwnableUpgradeable, ERC165Upgradeable {
 
   function setBridgeContract(
     uint32 domain,
-    uint32 version,
     address bridgeContract
   ) public onlyOwner {
-    bytes32 bridgeContractKey = _getBridgeKey(domain, version);
     require(
-      _bridgeContracts[bridgeContractKey] == address(0x0),
+      _bridgeContracts[domain] == address(0x0),
       "HashiConnextAdaptor: bridge already registered"
     );
-    _bridgeContracts[bridgeContractKey] = bridgeContract;
-    emit BridgeSet(domain, version, bridgeContract);
+    _bridgeContracts[domain] = bridgeContract;
+    emit BridgeSet(domain, bridgeContract);
   }
 
   function getConnext() public view returns (address) {
@@ -58,9 +56,8 @@ contract HashiConnextAdapter is OwnableUpgradeable, ERC165Upgradeable {
     return _selfDomain;
   }
 
-  function getBridgeContract(uint32 domain, uint32 version) public view returns (address){
-    bytes32 bridgeKey = _getBridgeKey(domain, version);
-    return _bridgeContracts[bridgeKey];
+  function getBridgeContract(uint32 domain) public view returns (address){
+    return _bridgeContracts[domain];
   }
 
   // solhint-disable-next-line func-name-mixedcase
@@ -92,10 +89,9 @@ contract HashiConnextAdapter is OwnableUpgradeable, ERC165Upgradeable {
 
   function _xcall(
     uint32 destinationdomain,
-    uint32 version,
     bytes memory callData
   ) internal {
-    address destinationContract = getBridgeContract(destinationdomain, version);
+    address destinationContract = getBridgeContract(destinationdomain);
     require(destinationContract != address(0x0), "HashiConnextAdapter: invalid bridge");
     CallParams memory callParams = CallParams({
       to: destinationContract,
@@ -115,7 +111,4 @@ contract HashiConnextAdapter is OwnableUpgradeable, ERC165Upgradeable {
     IConnextHandler(_connext).xcall(xcallArgs);
   }
 
-  function _getBridgeKey(uint32 domain, uint32 version) internal pure returns(bytes32){
-    return keccak256(abi.encodePacked(domain, version));
-  }
 }
