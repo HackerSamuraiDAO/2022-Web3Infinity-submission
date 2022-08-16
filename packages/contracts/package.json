@@ -1,5 +1,8 @@
 {
   "name": "contracts",
+  "version": "0.0.1",
+  "lisense": "NOLICENSE",
+  "private": true,
   "scripts": {
     "lint": "run-p lint:*",
     "lint:prettier": "prettier '**/*.{json,md,sol}' --ignore-path .gitignore --check",
@@ -8,7 +11,10 @@
     "fix": "run-p fix:*",
     "fix:prettier": "prettier '**/*.{json,md,sol}' --ignore-path .gitignore --write",
     "fix:eslint": "yarn lint:eslint --fix",
-    "fix:sol": "yarn lint:sol --fix"
+    "fix:sol": "yarn lint:sol --fix",
+    "test": "yarn hardhat test",
+    "coverage": "yarn hardhat coverage",
+    "build": "yarn hardhat compile"
   },
   "devDependencies": {
     "@nomicfoundation/hardhat-chai-matchers": "^1.0.2",

@@ -3,18 +3,18 @@ pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts-upgradeable/interfaces/IERC721Upgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/interfaces/IERC721MetadataUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/ClonesUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/utils/AddressUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/utils/introspection/ERC165Upgradeable.sol";
 
-// import "./HashiLayerZeroAdapter.sol";
 import "./HashiConnextAdapter.sol";
 import "./interfaces/IWrappedHashi721.sol";
 
 //TODO: remove when prod
 import "hardhat/console.sol";
 
-contract Hashi721Bridge is ERC165Upgradeable, HashiConnextAdapter {
+contract Hashi721Bridge is Initializable, ERC165Upgradeable, HashiConnextAdapter {
   mapping(address => mapping(uint256 => uint32)) private _destinations;
   mapping(address => address) private _contracts;
   mapping(address => uint32) private _domains;
@@ -75,7 +75,8 @@ contract Hashi721Bridge is ERC165Upgradeable, HashiConnextAdapter {
   ) public onlyExecutor {
     uint32 selfDomain = getSelfDomain();
     if (birthChainDomain == selfDomain) {
-      uint32 domain = _getOrigin();
+      address executor = getExecutor();
+      uint32 domain = _getOrigin(executor);
       require(_destinations[birthChainNFTContractAddress][tokenId] == domain, "Hashi721Bridge: invalid bridge");
       IERC721Upgradeable(birthChainNFTContractAddress).safeTransferFrom(address(this), to, tokenId);
       delete _destinations[birthChainNFTContractAddress][tokenId];

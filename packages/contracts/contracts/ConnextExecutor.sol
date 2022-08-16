@@ -2,25 +2,32 @@
 pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 
 //TODO: remove when prod
 import "hardhat/console.sol";
 
-contract ConnextExecutor is OwnableUpgradeable {
+contract ConnextExecutor is Initializable, OwnableUpgradeable {
   address private _originSender;
   uint32 private _origin;
 
+  event Executed(uint32 indexed originDomain, address indexed originSender, address indexed to, bytes callData);
+
+  function initialize() public initializer {
+    __ConnextExecutor_init();
+  }
+
   function execute(
-    uint32 origin,
-    address originSender,
+    uint32 originDomain,
+    address originSender_,
     address to,
-    bytes memory data
-  ) public {
-    _origin = origin;
-    _originSender = originSender;
-    // solhint-disable-next-line avoid-low-level-calls
-    (bool success, bytes memory log) = to.call(data);
-    require(success, "MockExecutor: failed");
+    bytes memory callData
+  ) public onlyOwner {
+    _origin = originDomain;
+    _originSender = originSender_;
+    (bool success, ) = to.call(callData);
+    require(success, "ConnextExecutor: execute failed");
+    emit Executed(originDomain, originSender_, to, callData);
     delete _origin;
     delete _originSender;
   }
@@ -33,12 +40,10 @@ contract ConnextExecutor is OwnableUpgradeable {
     return _origin;
   }
 
-  // solhint-disable-next-line func-name-mixedcase
   function __ConnextExecutor_init() internal onlyInitializing {
     __Ownable_init_unchained();
     __ConnextExecutor_init_unchained();
   }
 
-  // solhint-disable-next-line func-name-mixedcase
   function __ConnextExecutor_init_unchained() internal onlyInitializing {}
 }

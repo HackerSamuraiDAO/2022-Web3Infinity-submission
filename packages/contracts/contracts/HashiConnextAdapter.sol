@@ -2,6 +2,7 @@
 pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts-upgradeable/utils/introspection/ERC165Upgradeable.sol";
 
 import "@connext/nxtp-contracts/contracts/core/connext/libraries/LibConnextStorage.sol";
@@ -11,7 +12,7 @@ import "@connext/nxtp-contracts/contracts/core/connext/interfaces/IConnextHandle
 //TODO: remove when prod
 import "hardhat/console.sol";
 
-contract HashiConnextAdapter is OwnableUpgradeable, ERC165Upgradeable {
+contract HashiConnextAdapter is Initializable, OwnableUpgradeable, ERC165Upgradeable {
   mapping(uint32 => address) private _bridgeContracts;
 
   address private _connext;
@@ -22,11 +23,18 @@ contract HashiConnextAdapter is OwnableUpgradeable, ERC165Upgradeable {
 
   modifier onlyExecutor() {
     require(msg.sender == _executor, "HashiConnextAdapter: sender invalid");
-    uint32 domain = _getOrigin();
-    address originSender = _getOriginSender();
+    uint32 domain = _getOrigin(_executor);
+    address originSender = _getOriginSender(_executor);
     address expectedBridgeContract = getBridgeContract(domain);
     require(originSender == expectedBridgeContract, "HashiConnextAdapter: origin sender invalid");
     _;
+  }
+
+  function initialize(
+    uint32 selfDomain,
+    address connext
+  ) public initializer {
+    __HashiConnextAdapter_init(selfDomain, connext);
   }
 
   function setBridgeContract(uint32 domain, address bridgeContract) public onlyOwner {
@@ -51,25 +59,23 @@ contract HashiConnextAdapter is OwnableUpgradeable, ERC165Upgradeable {
     return _bridgeContracts[domain];
   }
 
-  // solhint-disable-next-line func-name-mixedcase
   function __HashiConnextAdapter_init(uint32 selfDomain, address connext) internal onlyInitializing {
     __Ownable_init_unchained();
     __HashiConnextAdapter_init_unchained(selfDomain, connext);
   }
 
-  // solhint-disable-next-line func-name-mixedcase
   function __HashiConnextAdapter_init_unchained(uint32 selfDomain, address connext) internal onlyInitializing {
     _selfDomain = selfDomain;
     _connext = connext;
     _executor = address(IConnextHandler(_connext).executor());
   }
 
-  function _getOrigin() internal returns (uint32) {
-    return IExecutor(msg.sender).origin();
+  function _getOrigin(address executor) internal returns (uint32) {
+    return IExecutor(executor).origin();
   }
 
-  function _getOriginSender() internal returns (address) {
-    return IExecutor(msg.sender).originSender();
+  function _getOriginSender(address executor) internal returns (address) {
+    return IExecutor(executor).originSender();
   }
 
   function _xcall(uint32 destinationdomain, bytes memory callData) internal {

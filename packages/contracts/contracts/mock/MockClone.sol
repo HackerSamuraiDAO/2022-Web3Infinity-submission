@@ -3,6 +3,9 @@ pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/proxy/Clones.sol";
 
+//TODO: remove when prod
+import "hardhat/console.sol";
+
 contract MockClone {
   function predictDeterministicAddress(
     address implementation,

@@ -20,9 +20,10 @@ contract WrappedHashi721 is
   ERC721URIStorageUpgradeable,
   IWrappedHashi721
 {
+  
   function initialize() public initializer {
-    __Ownable_init_unchained();
-    __ERC721_init_unchained("WrappedHashi721", "WHASHI721");
+    __Ownable_init();
+    __ERC721_init("WrappedHashi721", "WHASHI721");
   }
 
   function mint(
