@@ -5,12 +5,16 @@ import { ethers } from "hardhat";
 import { ADDRESS_1, NULL_ADDRESS } from "../lib/constant";
 import {
   Hashi721Bridge,
+  Hashi721Bridge__factory,
   MockClone,
+  MockClone__factory,
   MockExecutor,
+  MockExecutor__factory,
   MockNFT,
+  MockNFT__factory,
   WrappedHashi721,
   WrappedHashi721__factory,
-} from "../typechain-types";
+} from "../../shared/types/typechain";
 
 describe("Unit Test for Hashi721Bridge", function () {
   let signer: SignerWithAddress;
@@ -32,19 +36,17 @@ describe("Unit Test for Hashi721Bridge", function () {
   beforeEach(async function () {
     [signer, other, malicious] = await ethers.getSigners();
 
-    const MockConnextHandler = await ethers.getContractFactory(
-      "MockConnextHandler"
-    );
+    const MockConnextHandler = await ethers.getContractFactory("MockConnextHandler");
     const mockConnextHandler = await MockConnextHandler.deploy();
 
-    const MockExecutor = await ethers.getContractFactory("MockExecutor");
+    const MockExecutor = <MockExecutor__factory>await ethers.getContractFactory("MockExecutor");
     mockExecutor = await MockExecutor.deploy();
     await mockConnextHandler.setExecutor(mockExecutor.address);
 
-    WrappedHashi721 = await ethers.getContractFactory("WrappedHashi721");
+    WrappedHashi721 = <WrappedHashi721__factory>await ethers.getContractFactory("WrappedHashi721");
     wrappedHashi721 = await WrappedHashi721.deploy();
 
-    const Hashi721Bridge = await ethers.getContractFactory("Hashi721Bridge");
+    const Hashi721Bridge = <Hashi721Bridge__factory>await ethers.getContractFactory("Hashi721Bridge");
     hashi721Bridge = await Hashi721Bridge.deploy();
     await hashi721Bridge.initialize(
       selfDomain,
@@ -53,12 +55,16 @@ describe("Unit Test for Hashi721Bridge", function () {
     );
 
     const MockNFT = await ethers.getContractFactory("MockNFT");
+    
+    await hashi721Bridge.initialize(selfDomain, mockConnextHandler.address, wrappedHashi721.address);
+    const MockNFT = <MockNFT__factory>await ethers.getContractFactory("MockNFT");
     mockNFT = await MockNFT.deploy(baseTokenURL);
     await mockNFT.mint(signer.address);
     await mockNFT.mint(signer.address);
     await mockNFT.setApprovalForAll(hashi721Bridge.address, true);
 
     const MockClone = await ethers.getContractFactory("MockClone");
+    const MockClone = <MockClone__factory>await ethers.getContractFactory("MockClone");
     mockClone = await MockClone.deploy();
   });
 
@@ -87,28 +93,12 @@ describe("Unit Test for Hashi721Bridge", function () {
 
     // Error: Sender is not an owner of NFTs
     await expect(
-      hashi721Bridge.xSend(
-        mockNFT.address,
-        malicious.address,
-        ADDRESS_1,
-        tokenId_1,
-        sendToDomain,
-        version,
-        true
-      )
+      hashi721Bridge.xSend(mockNFT.address, malicious.address, ADDRESS_1, tokenId_1, sendToDomain, version, true)
     ).to.revertedWith("Hashi721Bridge: invalid from");
 
     // Successful:  isTokenURIIncluded == true
     await expect(
-      hashi721Bridge.xSend(
-        mockNFT.address,
-        signer.address,
-        ADDRESS_1,
-        tokenId_1,
-        sendToDomain,
-        version,
-        true
-      )
+      hashi721Bridge.xSend(mockNFT.address, signer.address, ADDRESS_1, tokenId_1, sendToDomain, version, true)
     )
       .to.emit(mockNFT, "Transfer")
       .withArgs(signer.address, hashi721Bridge.address, tokenId_1);
@@ -151,10 +141,7 @@ describe("Unit Test for Hashi721Bridge", function () {
     ]);
 
     await mockExecutor.execute(hashi721Bridge.address, data);
-    const salt = ethers.utils.solidityKeccak256(
-      ["uint32", "address"],
-      [birthDomain, mockNFT.address]
-    );
+    const salt = ethers.utils.solidityKeccak256(["uint32", "address"], [birthDomain, mockNFT.address]);
     const deployedContractAddress = await mockClone.predictDeterministicAddress(
       wrappedHashi721.address,
       salt,
@@ -177,15 +164,7 @@ describe("Unit Test for Hashi721Bridge", function () {
 
     // Successfull
     await expect(
-      hashi721Bridge.xSend(
-        deployedContract.address,
-        signer.address,
-        ADDRESS_1,
-        tokenId,
-        fromDomain,
-        version,
-        true
-      )
+      hashi721Bridge.xSend(deployedContract.address, signer.address, ADDRESS_1, tokenId, fromDomain, version, true)
     )
       .to.emit(deployedContract, "Transfer")
       .withArgs(signer.address, NULL_ADDRESS, tokenId);
@@ -196,15 +175,7 @@ describe("Unit Test for Hashi721Bridge", function () {
     const tokenId = "0";
     const toContract = ADDRESS_1;
     await hashi721Bridge.setBridgeContract(sendToDomain, version, toContract);
-    await hashi721Bridge.xSend(
-      mockNFT.address,
-      signer.address,
-      ADDRESS_1,
-      tokenId,
-      sendToDomain,
-      version,
-      true
-    );
+    await hashi721Bridge.xSend(mockNFT.address, signer.address, ADDRESS_1, tokenId, sendToDomain, version, true);
     const birthDomain = selfDomain;
     const fromDomain = "1";
     const maliciousDomain = "2";
@@ -248,9 +219,7 @@ describe("Unit Test for Hashi721Bridge", function () {
     expect(await mockNFT.ownerOf(tokenId)).to.equal(signer.address);
 
     await mockNFT.transferFrom(signer.address, hashi721Bridge.address, tokenId);
-    await expect(
-      mockExecutor.execute(hashi721Bridge.address, data_1)
-    ).to.revertedWith("MockExecutor: failed");
+    await expect(mockExecutor.execute(hashi721Bridge.address, data_1)).to.revertedWith("MockExecutor: failed");
   });
 
   it("xReceive - receiver is not in birth chain", async function () {
