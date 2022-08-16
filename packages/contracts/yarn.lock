@@ -620,7 +620,17 @@
     chalk "^4.1.0"
     proper-lockfile "^4.1.1"
 
-"@openzeppelin/upgrades-core@^1.14.1":
+"@openzeppelin/hardhat-upgrades@^1.20.0":
+  version "1.20.0"
+  resolved "https://registry.yarnpkg.com/@openzeppelin/hardhat-upgrades/-/hardhat-upgrades-1.20.0.tgz#fe1bddc4ab591ccf185caf4cfa269a4851b73599"
+  integrity sha512-ign7fc/ZdPe+KAYCB91619o+wlBr7sIEEt1nqLhoXAJ9f0qVuXkwAaTdLB0MTSWH85TzlUUT2fTJp1ZnZ1o4LQ==
+  dependencies:
+    "@openzeppelin/upgrades-core" "^1.18.0"
+    chalk "^4.1.0"
+    debug "^4.1.1"
+    proper-lockfile "^4.1.1"
+
+"@openzeppelin/upgrades-core@^1.14.1", "@openzeppelin/upgrades-core@^1.18.0":
   version "1.18.0"
   resolved "https://registry.yarnpkg.com/@openzeppelin/upgrades-core/-/upgrades-core-1.18.0.tgz#a5db80d15e6b87d45307ad27314c91807a506c00"
   integrity sha512-fFp5sscGC876yhq7BU595LG45yky21sZFa6cDJigluUjAyJSPoLwF7GD9bSwQMMo4jC7ii1UJBtLipUxN6PVTA==

@@ -1,0 +1,28 @@
+{
+  "4": {
+    "name": "Rinkeby",
+    "domainId": 1111,
+    "contracts": {
+      "wrappedNftImplementation": "0x3b048721870EBB14883897Fda8b0D7d8324BF431",
+      "bridge": "0xc67ceD7ae1Bb5F9f04946eF03E8FDbBa521379D0",
+      "connext": "0x4cAA6358a3d9d1906B5DABDE60A626AAfD80186F",
+      "faucet": "0x5B26da852945f37638Ff987c060022e8159a57c5",
+      "testToken": "0x3FFc03F05D1869f493c7dbf913E636C6280e0ff9"
+    },
+    "explorer": "https://rinkeby.etherscan.io/",
+    "rpc": "https://rinkeby.infura.io/v3/95f65ab099894076814e8526f52c9149"
+  },
+  "5": {
+    "name": "Goerli",
+    "domainId": 3331,
+    "contracts": {
+      "wrappedNftImplementation": "0xA0D0E016A0d26f51d9cb0b790B795E6830338b2C",
+      "bridge": "0xC6453Fb215790a759873c46d8f77DEE5692fEc43",
+      "connext": "0x6c9a905Ab3f4495E2b47f5cA131ab71281E0546e",
+      "faucet": "0x35de708c2355B5f02c2F5bFB800E22d4Bb40233A",
+      "testToken": "0x26FE8a8f86511d678d031a022E48FfF41c6a3e3b"
+    },
+    "explorer": "https://goerli.etherscan.io/",
+    "rpc": "https://goerli.infura.io/v3/95f65ab099894076814e8526f52c9149"
+  }
+}
