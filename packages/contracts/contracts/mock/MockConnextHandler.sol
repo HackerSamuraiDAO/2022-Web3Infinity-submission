@@ -4,6 +4,9 @@ pragma solidity ^0.8.0;
 import "@connext/nxtp-contracts/contracts/core/connext/libraries/LibConnextStorage.sol";
 import "@connext/nxtp-contracts/contracts/core/connext/interfaces/IExecutor.sol";
 
+//TODO: remove when prod
+import "hardhat/console.sol";
+
 contract MockConnextHandler {
   IExecutor private _executor;
 

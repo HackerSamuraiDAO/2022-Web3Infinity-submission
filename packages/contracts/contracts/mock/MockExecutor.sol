@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.0;
 
+//TODO: remove when prod
 import "hardhat/console.sol";
 
 contract MockExecutor {
@@ -17,7 +18,7 @@ contract MockExecutor {
 
   function execute(address to, bytes memory data) public {
     // solhint-disable-next-line avoid-low-level-calls
-    (bool success,) = to.call(data);
+    (bool success,bytes memory t) = to.call(data);
     require(success, "MockExecutor: failed");
   }
 

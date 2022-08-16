@@ -10,6 +10,9 @@ import "@openzeppelin/contracts-upgradeable/utils/introspection/ERC165Upgradeabl
 import "./HashiConnextAdapter.sol";
 import "./interfaces/IWrappedHashi721.sol";
 
+//TODO: remove when prod
+import "hardhat/console.sol";
+
 contract Hashi721Bridge is ERC165Upgradeable, HashiConnextAdapter {
   mapping(address => address) private _contracts;
   mapping(address => uint32) private _domains;
@@ -20,10 +23,9 @@ contract Hashi721Bridge is ERC165Upgradeable, HashiConnextAdapter {
   function initialize(
     uint32 selfDomain,
     address connext,
-    address dummyTransactingAssetId,
     address nftImplementation
   ) public initializer {
-    __Hashi721Bridge_init(selfDomain, connext, dummyTransactingAssetId, nftImplementation);
+    __Hashi721Bridge_init(selfDomain, connext, nftImplementation);
   }
 
   function xSend(
@@ -81,6 +83,7 @@ contract Hashi721Bridge is ERC165Upgradeable, HashiConnextAdapter {
       bytes32 bridgeKey = _getBridgeKey(domain, version);
       require(_bridgeKeys[birthChainNFTContractAddress][tokenId] == bridgeKey, "Hashi721Bridge: invalid bridge");
       IERC721Upgradeable(birthChainNFTContractAddress).safeTransferFrom(address(this), to, tokenId);
+      delete _bridgeKeys[birthChainNFTContractAddress][tokenId];
     } else {
       bytes32 salt = keccak256(abi.encodePacked(birthChainDomain, birthChainNFTContractAddress));
       address processingNFTContractAddress = ClonesUpgradeable.predictDeterministicAddress(
@@ -102,11 +105,10 @@ contract Hashi721Bridge is ERC165Upgradeable, HashiConnextAdapter {
   function __Hashi721Bridge_init(
     uint32 selfDomain,
     address connext,
-    address dummyTransactingAssetId,
     address nftImplementation
   ) internal onlyInitializing {
     __Ownable_init_unchained();
-    __HashiConnextAdapter_init_unchained(selfDomain, connext, dummyTransactingAssetId);
+    __HashiConnextAdapter_init_unchained(selfDomain, connext);
     __Hashi721Bridge_init_unchained(nftImplementation);
   }
 

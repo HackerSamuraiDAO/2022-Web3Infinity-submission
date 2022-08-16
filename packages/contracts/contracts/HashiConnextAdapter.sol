@@ -8,6 +8,7 @@ import "@connext/nxtp-contracts/contracts/core/connext/libraries/LibConnextStora
 import "@connext/nxtp-contracts/contracts/core/connext/interfaces/IExecutor.sol";
 import "@connext/nxtp-contracts/contracts/core/connext/interfaces/IConnextHandler.sol";
 
+//TODO: remove when prod
 import "hardhat/console.sol";
 
 contract HashiConnextAdapter is OwnableUpgradeable, ERC165Upgradeable {
@@ -15,7 +16,6 @@ contract HashiConnextAdapter is OwnableUpgradeable, ERC165Upgradeable {
 
   address private _connext;
   address private _executor;
-  address private _transactingAssetId;
   uint32 private _selfDomain;
 
   event BridgeSet(uint32 domain, uint32 version, address bridgeContract);
@@ -66,23 +66,20 @@ contract HashiConnextAdapter is OwnableUpgradeable, ERC165Upgradeable {
   // solhint-disable-next-line func-name-mixedcase
   function __HashiConnextAdapter_init(
     uint32 selfDomain,
-    address connext,
-    address transactingAssetId
+    address connext
   ) internal onlyInitializing {
     __Ownable_init_unchained();
-    __HashiConnextAdapter_init_unchained(selfDomain, connext, transactingAssetId);
+    __HashiConnextAdapter_init_unchained(selfDomain, connext);
   }
 
   // solhint-disable-next-line func-name-mixedcase
   function __HashiConnextAdapter_init_unchained(
     uint32 selfDomain,
-    address connext,
-    address transactingAssetId
+    address connext
   ) internal onlyInitializing {
     _selfDomain = selfDomain;
     _connext = connext;
     _executor = address(IConnextHandler(_connext).executor());
-    _transactingAssetId = transactingAssetId;
   }
 
   function _getOrigin() internal returns (uint32) {

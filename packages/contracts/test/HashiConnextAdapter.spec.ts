@@ -24,8 +24,6 @@ describe("Unit Test for HashiConnextAdapter", function () {
 
   const opponentContract = ADDRESS_1;
 
-  const dummyTransactingAssetId = ADDRESS_1;
-
   beforeEach(async function () {
     [, malicious] = await ethers.getSigners();
     const MockConnextHandler = await ethers.getContractFactory(
@@ -42,9 +40,50 @@ describe("Unit Test for HashiConnextAdapter", function () {
     );
     mockHashiConnextAdapter = await MockHashiConnextAdapter.deploy(
       selfDomain,
-      mockConnextHandler.address,
-      dummyTransactingAssetId
+      mockConnextHandler.address
     );
+  });
+
+  it("getConnext", async function () {
+    expect(await mockHashiConnextAdapter.getConnext()).to.equal(
+      mockConnextHandler.address
+    );
+  });
+
+  it("getExecutor", async function () {
+    expect(await mockHashiConnextAdapter.getExecutor()).to.equal(
+      mockExecutor.address
+    );
+  });
+
+  it("getSelfDomain", async function () {
+    expect(await mockHashiConnextAdapter.getSelfDomain()).to.equal(selfDomain);
+  });
+
+  it("setBridgeContract", async function () {
+    await mockHashiConnextAdapter.setBridgeContract(
+      opponentDomain,
+      version,
+      opponentContract
+    );
+    await expect(
+      mockHashiConnextAdapter.setBridgeContract(
+        opponentDomain,
+        version,
+        opponentContract
+      )
+    ).to.revertedWith("HashiConnextAdaptor: bridge already registered");
+  });
+
+  it("getBridgeContract", async function () {
+    await mockHashiConnextAdapter.setBridgeContract(
+      opponentDomain,
+      version,
+      opponentContract
+    );
+    expect(
+      await mockHashiConnextAdapter.getBridgeContract(opponentDomain, version)
+    ).to.equal(opponentContract);
   });
 
   it("onlyExecutor", async function () {

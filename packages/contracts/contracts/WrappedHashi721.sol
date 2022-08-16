@@ -9,6 +9,9 @@ import "@openzeppelin/contracts-upgradeable/utils/introspection/ERC165Upgradeabl
 
 import "./interfaces/IWrappedHashi721.sol";
 
+//TODO: remove when prod
+import "hardhat/console.sol";
+
 contract WrappedHashi721 is
   Initializable,
   ERC165Upgradeable,

@@ -3,21 +3,22 @@ pragma solidity ^0.8.0;
 
 import "../HashiConnextAdapter.sol";
 
+//TODO: remove when prod
+import "hardhat/console.sol";
+
 contract MockHashiConnextAdapter is HashiConnextAdapter {
   constructor(
     uint32 selfDomain,
-    address connext,
-    address transactingAssetId
+    address connext
   ) {
-    initialize(selfDomain, connext, transactingAssetId);
+    initialize(selfDomain, connext);
   }
 
   function initialize(
     uint32 selfDomain,
-    address connext,
-    address transactingAssetId
+    address connext
   ) public initializer {
-    __HashiConnextAdapter_init(selfDomain, connext, transactingAssetId);
+    __HashiConnextAdapter_init(selfDomain, connext);
   }
 
   // solhint-disable-next-line no-empty-blocks
