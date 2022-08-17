@@ -15,6 +15,7 @@ import axios from "axios";
 import { ethers } from "ethers";
 import React from "react";
 import { VscArrowSwap } from "react-icons/vsc";
+// import { useReward } from "react-rewards";
 import { erc721ABI, useAccount, useNetwork, useSigner } from "wagmi";
 
 import Hashi721BridgeArtifact from "../../../../contracts/artifacts/contracts/Hashi721Bridge.sol/Hashi721Bridge.json";
@@ -39,6 +40,9 @@ export const Main: React.FC = () => {
   const [isLoading, setIsLoading] = React.useState(false);
   const [consoleMode, setConsoleMode] = React.useState<"normal" | "error">("normal");
   const [consoleText, setConsoleText] = React.useState([defaultConsoleText]);
+
+  // const { reward: confettiReward, isAnimating: isConfettiAnimating } = useReward("confettiReward", "confetti");
+
   const { address } = useAccount();
   const { data: signer } = useSigner();
   const { chain } = useNetwork();
@@ -63,7 +67,6 @@ export const Main: React.FC = () => {
     }
     setIsLoading(true);
     try {
-      log("bridge start, checking connected network...");
       const sorceNetwork = networks[sourceChainId];
       const targetNetwork = networks[targetChainId];
       const connectedChainId = chain.id.toString();
@@ -72,7 +75,7 @@ export const Main: React.FC = () => {
         return;
       }
       const nftContract = new ethers.Contract(selectedNFT.contractAddress, erc721ABI, signer);
-      log("connected network is ok, checking approval status...");
+      log("network is ok, checking approval...");
       const resolved = await Promise.all([
         nftContract.getApproved(selectedNFT.tokenId).catch(() => false),
         nftContract.isApprovedForAll(address, sorceNetwork.contracts.bridge).catch(() => false),
@@ -87,7 +90,7 @@ export const Main: React.FC = () => {
       }
 
       const bridge = new ethers.Contract(bridgeContractAddress, Hashi721BridgeArtifact.abi, signer);
-      log("approval status is ok, uploading content to ipfs via nft storage...");
+      log("approval is ok, uploading content to ipfs via nft storage...");
       const { data: tokenURI } = await axios.post("/api/storage/add", {
         chainId: sourceChainId,
         contractAddress: selectedNFT.contractAddress,
@@ -102,8 +105,8 @@ export const Main: React.FC = () => {
         targetNetwork.domain,
         tokenURI
       );
-      log("tx hash", hash);
       clear();
+      log("bridge tx sent", hash);
     } catch (e: any) {
       error(e.message);
     } finally {
@@ -180,6 +183,7 @@ export const Main: React.FC = () => {
   return (
     <Stack spacing="4">
       <Box shadow="base" borderRadius="2xl" p="4" backgroundColor={config.styles.background.color.main}>
+        <span id="confettiReward" />
         <Stack spacing="4">
           <HStack justify={"space-between"} align="center">
             <VStack w="full">
