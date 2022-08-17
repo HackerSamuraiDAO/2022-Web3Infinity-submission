@@ -20,6 +20,7 @@ import { VscArrowSwap } from "react-icons/vsc";
 import { erc721ABI, useAccount, useNetwork, useSigner } from "wagmi";
 
 import Hashi721BridgeArtifact from "../../../../contracts/artifacts/contracts/Hashi721Bridge.sol/Hashi721Bridge.json";
+import HashiFaucetERC721Artifact from "../../../../contracts/artifacts/contracts/HashiFaucetERC721.sol/HashiFaucetERC721.json";
 import networks from "../../../../contracts/networks.json";
 import { ChainId, isChainId } from "../../../../contracts/types/network";
 import config from "../../../config.json";
@@ -126,6 +127,15 @@ export const Main: React.FC = () => {
     clear();
     setSourceChainId(targetChainId);
     setTargetChainId(sourceChainId);
+  };
+
+  const mintNFTFromFaucet = async () => {
+    if (!signer) {
+      return;
+    }
+    const faucet = new ethers.Contract(networks[sourceChainId].contracts.faucet, HashiFaucetERC721Artifact.abi, signer);
+    await faucet.mint();
+    alert(`mint tx sent. please wait for some time then reload page to select minted nft.`);
   };
 
   const openSelectNFTModal = async () => {
@@ -265,11 +275,9 @@ export const Main: React.FC = () => {
               )}
             </HStack>
             <Modal isOpen={isOpen} onClose={closeModal} header="Select NFT">
-              <Text fontSize="xs" color={"blue"}>
-                <Link color={"blue"} onClick={() => console.log()}>
-                  Mint Test NFT from Faucet
-                </Link>
-              </Text>
+              <Button fontSize="xs" color={"blue"} onClick={mintNFTFromFaucet}>
+                Mint Test NFT from Faucet
+              </Button>
               <Flex justify={"center"} mt="8">
                 <SimpleGrid columns={2} gap={4}>
                   {nfts.map((nft, i) => {
