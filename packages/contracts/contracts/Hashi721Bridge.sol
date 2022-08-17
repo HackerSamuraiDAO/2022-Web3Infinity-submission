@@ -9,7 +9,7 @@ import "@openzeppelin/contracts-upgradeable/utils/AddressUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/utils/introspection/ERC165Upgradeable.sol";
 
 import "./HashiConnextAdapter.sol";
-import "./interfaces/IWrappedHashi721.sol";
+import "./interfaces/IHashiWrapped721.sol";
 
 //TODO: remove when prod
 import "hardhat/console.sol";
@@ -54,7 +54,7 @@ contract Hashi721Bridge is Initializable, ERC165Upgradeable, HashiConnextAdapter
       birthChainNFTContractAddress = _contracts[processingNFTContractAddress];
       birthChainDomain = _domains[processingNFTContractAddress];
       // require(destinationDomain == birthChainDomain, "Hashi721Bridge: invalid destination domain");
-      IWrappedHashi721(processingNFTContractAddress).burn(tokenId);
+      IHashiWrapped721(processingNFTContractAddress).burn(tokenId);
     }
     bytes memory callData = abi.encodeWithSelector(
       this.xReceive.selector,
@@ -92,9 +92,9 @@ contract Hashi721Bridge is Initializable, ERC165Upgradeable, HashiConnextAdapter
         ClonesUpgradeable.cloneDeterministic(_nftImplementation, salt);
         _contracts[processingNFTContractAddress] = birthChainNFTContractAddress;
         _domains[processingNFTContractAddress] = birthChainDomain;
-        IWrappedHashi721(processingNFTContractAddress).initialize();
+        IHashiWrapped721(processingNFTContractAddress).initialize();
       }
-      IWrappedHashi721(processingNFTContractAddress).mint(to, tokenId, tokenURI);
+      IHashiWrapped721(processingNFTContractAddress).mint(to, tokenId, tokenURI);
     }
   }
 

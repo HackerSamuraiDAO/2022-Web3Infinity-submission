@@ -9,13 +9,13 @@ import "@connext/nxtp-contracts/contracts/core/connext/interfaces/IExecutor.sol"
 //TODO: remove when prod
 import "hardhat/console.sol";
 
-contract ConnextHandler is Initializable {
+contract HashiHandler is Initializable {
   IExecutor private _executor;
 
   event Called(uint32 indexed destinationDomain, address indexed originSender, address indexed to, bytes callData);
 
   function initialize(IExecutor executor) public initializer {
-    __ConnextHandler_init(executor);
+    __HashiHandler_init(executor);
   }
 
   function xcall(XCallArgs memory xCallArgs) public payable returns (bytes32) {
@@ -26,11 +26,11 @@ contract ConnextHandler is Initializable {
     return _executor;
   }
 
-  function __ConnextHandler_init(IExecutor executor) internal onlyInitializing {
-    __ConnextHandler_init_unchained(executor);
+  function __HashiHandler_init(IExecutor executor) internal onlyInitializing {
+    __HashiHandler_init_unchained(executor);
   }
 
-  function __ConnextHandler_init_unchained(IExecutor executor) internal onlyInitializing {
+  function __HashiHandler_init_unchained(IExecutor executor) internal onlyInitializing {
     _executor = executor;
   }
 }

@@ -3,13 +3,13 @@ import { expect } from "chai";
 import { ethers } from "hardhat";
 
 import {
-  ConnextExecutor,
-  ConnextExecutor__factory,
-  ConnextHandler,
   Hashi721Bridge,
+  HashiExecutor,
+  HashiExecutor__factory,
+  HashiHandler,
+  HashiWrapped721,
+  HashiWrapped721__factory,
   MockNFT,
-  WrappedHashi721,
-  WrappedHashi721__factory,
 } from "../../shared/types/typechain";
 // import { ADDRESS_1, ADDRESS_2, ADDRESS_3, NULL_ADDRESS } from "../lib/constant";
 import { ADDRESS_1, ADDRESS_2, NULL_ADDRESS } from "../lib/constant";
@@ -20,15 +20,15 @@ describe("Unit Test for Hashi721Bridge", function () {
   let sendTo: SignerWithAddress;
   let malicious: SignerWithAddress;
 
-  let ConnextExecutor: ConnextExecutor__factory;
-  let connextExecutor: ConnextExecutor;
-  let connextHandler: ConnextHandler;
+  let HashiExecutor: HashiExecutor__factory;
+  let hashiExecutor: HashiExecutor;
+  let hashiHandler: HashiHandler;
   let selfHashi721Bridge: Hashi721Bridge;
   let opponentHashi721Bridge: Hashi721Bridge;
 
-  let WrappedHashi721: WrappedHashi721__factory;
-  let wrappedHashi721: WrappedHashi721;
-  let depoloyedNFT: WrappedHashi721;
+  let HashiWrapped721: HashiWrapped721__factory;
+  let hashiWrapped721: HashiWrapped721;
+  let depoloyedNFT: HashiWrapped721;
   let mockNFT: MockNFT;
 
   const selfDomain = 0;
@@ -47,21 +47,21 @@ describe("Unit Test for Hashi721Bridge", function () {
   beforeEach(async function () {
     [, holder, owner, sendTo, malicious] = await ethers.getSigners();
 
-    ConnextExecutor = <ConnextExecutor__factory>await ethers.getContractFactory("ConnextExecutor");
-    connextExecutor = <ConnextExecutor>await ConnextExecutor.deploy();
-    const ConnextHandler = await ethers.getContractFactory("ConnextHandler");
-    connextHandler = <ConnextHandler>await ConnextHandler.deploy();
-    WrappedHashi721 = <WrappedHashi721__factory>await ethers.getContractFactory("WrappedHashi721");
-    wrappedHashi721 = <WrappedHashi721>await WrappedHashi721.deploy();
+    HashiExecutor = <HashiExecutor__factory>await ethers.getContractFactory("HashiExecutor");
+    hashiExecutor = <HashiExecutor>await HashiExecutor.deploy();
+    const HashiHandler = await ethers.getContractFactory("HashiHandler");
+    hashiHandler = <HashiHandler>await HashiHandler.deploy();
+    HashiWrapped721 = <HashiWrapped721__factory>await ethers.getContractFactory("HashiWrapped721");
+    hashiWrapped721 = <HashiWrapped721>await HashiWrapped721.deploy();
     const Hashi721Bridge = await ethers.getContractFactory("Hashi721Bridge");
     selfHashi721Bridge = <Hashi721Bridge>await Hashi721Bridge.deploy();
     opponentHashi721Bridge = <Hashi721Bridge>await Hashi721Bridge.deploy();
 
-    await connextExecutor.connect(owner).initialize();
-    await connextHandler.initialize(connextExecutor.address);
-    await wrappedHashi721.connect(owner).initialize();
-    await selfHashi721Bridge.initialize(selfDomain, connextHandler.address, wrappedHashi721.address);
-    await opponentHashi721Bridge.initialize(opponentDomain, connextHandler.address, wrappedHashi721.address);
+    await hashiExecutor.connect(owner).initialize();
+    await hashiHandler.initialize(hashiExecutor.address);
+    await hashiWrapped721.connect(owner).initialize();
+    await selfHashi721Bridge.initialize(selfDomain, hashiHandler.address, hashiWrapped721.address);
+    await opponentHashi721Bridge.initialize(opponentDomain, hashiHandler.address, hashiWrapped721.address);
 
     const MockNFT = await ethers.getContractFactory("MockNFT");
     mockNFT = <MockNFT>await MockNFT.connect(owner).deploy(baseTokenURL);
@@ -71,11 +71,11 @@ describe("Unit Test for Hashi721Bridge", function () {
 
     const salt = ethers.utils.solidityKeccak256(["uint32", "address"], [selfDomain, mockNFT.address]);
     const depoloyedNFTAddress = await mockClone.predictDeterministicAddress(
-      wrappedHashi721.address,
+      hashiWrapped721.address,
       salt,
       opponentHashi721Bridge.address
     );
-    depoloyedNFT = WrappedHashi721.attach(depoloyedNFTAddress);
+    depoloyedNFT = HashiWrapped721.attach(depoloyedNFTAddress);
   });
 
   it("xSend: validateAuthorization", async function () {
@@ -129,7 +129,7 @@ describe("Unit Test for Hashi721Bridge", function () {
     ]);
 
     await expect(
-      connextExecutor
+      hashiExecutor
         .connect(owner)
         .execute(selfDomain, selfBridgeContract, opponentHashi721Bridge.address, xReceiveDataAtOpponent_1)
     )
@@ -145,7 +145,7 @@ describe("Unit Test for Hashi721Bridge", function () {
     ]);
 
     await expect(
-      connextExecutor
+      hashiExecutor
         .connect(owner)
         .execute(selfDomain, selfBridgeContract, opponentHashi721Bridge.address, xReceiveDataAtOpponent_2)
     )
@@ -178,7 +178,7 @@ describe("Unit Test for Hashi721Bridge", function () {
     ]);
 
     await expect(
-      connextExecutor
+      hashiExecutor
         .connect(owner)
         .execute(selfDomain, selfBridgeContract, opponentHashi721Bridge.address, xReceiveDataAtOpponent_1)
     )
@@ -201,7 +201,7 @@ describe("Unit Test for Hashi721Bridge", function () {
       "",
     ]);
     await expect(
-      connextExecutor
+      hashiExecutor
         .connect(owner)
         .execute(opponentDomain, opponentBridgeContract, selfHashi721Bridge.address, xReceiveDataAtSelf)
     )

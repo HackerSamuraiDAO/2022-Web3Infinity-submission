@@ -3,9 +3,9 @@ import { expect } from "chai";
 import { ethers } from "hardhat";
 
 import {
-  ConnextExecutor,
-  ConnextExecutor__factory,
-  ConnextHandler,
+  HashiExecutor,
+  HashiExecutor__factory,
+  HashiHandler,
   MockHashiConnextAdapterExposure,
 } from "../../shared/types/typechain";
 import { ADDRESS_1, ADDRESS_2 } from "../lib/constant";
@@ -13,9 +13,9 @@ import { ADDRESS_1, ADDRESS_2 } from "../lib/constant";
 describe("Unit Test for HashiConnextAdapter", function () {
   let owner: SignerWithAddress;
 
-  let ConnextExecutor: ConnextExecutor__factory;
-  let connextExecutor: ConnextExecutor;
-  let connextHandler: ConnextHandler;
+  let HashiExecutor: HashiExecutor__factory;
+  let hashiExecutor: HashiExecutor;
+  let hashiHandler: HashiHandler;
   let mockHashiConnextAdapterExposure: MockHashiConnextAdapterExposure;
 
   const selfDomain = 0;
@@ -28,27 +28,27 @@ describe("Unit Test for HashiConnextAdapter", function () {
     const MockHashiConnextAdapterExposure = await ethers.getContractFactory("MockHashiConnextAdapterExposure");
     mockHashiConnextAdapterExposure = <MockHashiConnextAdapterExposure>await MockHashiConnextAdapterExposure.deploy();
 
-    ConnextExecutor = <ConnextExecutor__factory>await ethers.getContractFactory("ConnextExecutor");
-    connextExecutor = <ConnextExecutor>await ConnextExecutor.deploy();
-    const ConnextHandler = await ethers.getContractFactory("ConnextHandler");
-    connextHandler = <ConnextHandler>await ConnextHandler.deploy();
-    await connextExecutor.connect(owner).initialize();
-    await connextHandler.initialize(connextExecutor.address);
-    await mockHashiConnextAdapterExposure.connect(owner).initialize(selfDomain, connextHandler.address);
+    HashiExecutor = <HashiExecutor__factory>await ethers.getContractFactory("HashiExecutor");
+    hashiExecutor = <HashiExecutor>await HashiExecutor.deploy();
+    const HashiHandler = await ethers.getContractFactory("HashiHandler");
+    hashiHandler = <HashiHandler>await HashiHandler.deploy();
+    await hashiExecutor.connect(owner).initialize();
+    await hashiHandler.initialize(hashiExecutor.address);
+    await mockHashiConnextAdapterExposure.connect(owner).initialize(selfDomain, hashiHandler.address);
   });
 
   it("initialize", async function () {
-    await expect(mockHashiConnextAdapterExposure.initialize(selfDomain, connextHandler.address)).to.revertedWith(
+    await expect(mockHashiConnextAdapterExposure.initialize(selfDomain, hashiHandler.address)).to.revertedWith(
       "Initializable: contract is already initialized"
     );
   });
 
   it("getConnext", async function () {
-    expect(await mockHashiConnextAdapterExposure.getConnext()).to.equal(connextHandler.address);
+    expect(await mockHashiConnextAdapterExposure.getConnext()).to.equal(hashiHandler.address);
   });
 
   it("getExecutor", async function () {
-    expect(await mockHashiConnextAdapterExposure.getExecutor()).to.equal(connextExecutor.address);
+    expect(await mockHashiConnextAdapterExposure.getExecutor()).to.equal(hashiExecutor.address);
   });
 
   it("getSelfDomain", async function () {
@@ -66,24 +66,24 @@ describe("Unit Test for HashiConnextAdapter", function () {
   it("onlyExecutor", async function () {
     const sigHash = mockHashiConnextAdapterExposure.interface.getSighash("testOnlyExecutor");
     await mockHashiConnextAdapterExposure.connect(owner).setBridgeContract(opponentDomain, opponentBridgeContract);
-    await connextExecutor
+    await hashiExecutor
       .connect(owner)
       .execute(opponentDomain, opponentBridgeContract, mockHashiConnextAdapterExposure.address, sigHash);
 
-    const maliciousConnextExecutor = await ConnextExecutor.deploy();
-    await maliciousConnextExecutor.connect(owner).initialize();
+    const maliciousHashiExecutor = await HashiExecutor.deploy();
+    await maliciousHashiExecutor.connect(owner).initialize();
 
     await expect(
-      maliciousConnextExecutor
+      maliciousHashiExecutor
         .connect(owner)
         .execute(opponentDomain, opponentBridgeContract, mockHashiConnextAdapterExposure.address, sigHash)
-    ).to.revertedWith("ConnextExecutor: execute failed");
+    ).to.revertedWith("HashiExecutor: execute failed");
 
     await expect(
-      connextExecutor
+      hashiExecutor
         .connect(owner)
         .execute(opponentDomain, maliciousOpponentContract, mockHashiConnextAdapterExposure.address, sigHash)
-    ).to.revertedWith("ConnextExecutor: execute failed");
+    ).to.revertedWith("HashiExecutor: execute failed");
   });
 
   it("xCall", async function () {

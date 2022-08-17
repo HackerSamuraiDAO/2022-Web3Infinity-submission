@@ -18,7 +18,6 @@ import { VscArrowSwap } from "react-icons/vsc";
 import { erc721ABI, useAccount, useNetwork, useSigner } from "wagmi";
 
 import Hashi721BridgeArtifact from "../../../../shared/artifacts/contracts/Hashi721Bridge.sol/Hashi721Bridge.json";
-import { BRIDGE_VERSION } from "../../../../shared/constants";
 import networks from "../../../../shared/networks.json";
 import { ChainId, isChainId } from "../../../../shared/types/network";
 import { ERC721, Hashi721Bridge } from "../../../../shared/types/typechain";
@@ -70,7 +69,6 @@ export const Main: React.FC = () => {
     if (!approved) {
       console.log("sending approve tx...");
       const tx = await nftContract.setApprovalForAll(bridgeContractAddress, true);
-
       console.log("approve tx send", tx.hash);
       console.log("waiting for tx confirmation");
       await tx.wait();
@@ -85,7 +83,6 @@ export const Main: React.FC = () => {
       address,
       selectedNFT.tokenId,
       targetNetwork.domainId,
-      BRIDGE_VERSION,
       true
     );
   };
@@ -101,9 +98,9 @@ export const Main: React.FC = () => {
       return;
     }
     setIsLoading(true);
-    const { data } = await axios.post("/api/nft", {
+    const { data } = await axios.get(`/api/nfts?chainId=${sourceChainId}&address=${address}`);
+    await axios.post("/api/relayer/run", {
       chainId: sourceChainId,
-      address,
     });
     if (data.length) {
       setNFTs(data);

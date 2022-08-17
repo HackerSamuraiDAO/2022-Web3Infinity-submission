@@ -1,26 +1,24 @@
 import { expect } from "chai";
 import { ethers } from "hardhat";
 
-import { ConnextHandler } from "../../shared/types/typechain";
+import { HashiHandler } from "../../shared/types/typechain";
 import { ADDRESS_1, ADDRESS_2, NULL_ADDRESS } from "../lib/constant";
 
-describe("Unit Test for ConnextHandler", function () {
-  let connextHandler: ConnextHandler;
+describe("Unit Test for HashiHandler", function () {
+  let hashiHandler: HashiHandler;
 
   beforeEach(async function () {
-    const ConnextHandler = await ethers.getContractFactory("ConnextHandler");
-    connextHandler = <ConnextHandler>await ConnextHandler.deploy();
-    await connextHandler.initialize(ADDRESS_1);
+    const HashiHandler = await ethers.getContractFactory("HashiHandler");
+    hashiHandler = <HashiHandler>await HashiHandler.deploy();
+    await hashiHandler.initialize(ADDRESS_1);
   });
 
   it("initialize", async function () {
-    await expect(connextHandler.initialize(ADDRESS_1)).to.revertedWith(
-      "Initializable: contract is already initialized"
-    );
+    await expect(hashiHandler.initialize(ADDRESS_1)).to.revertedWith("Initializable: contract is already initialized");
   });
 
   it("executor", async function () {
-    expect(await connextHandler.executor()).to.equal(ADDRESS_1);
+    expect(await hashiHandler.executor()).to.equal(ADDRESS_1);
   });
 
   it("xcall", async function () {
@@ -46,8 +44,8 @@ describe("Unit Test for ConnextHandler", function () {
       amount: 0,
     };
 
-    await expect(connextHandler.xcall(xCallArgs))
-      .to.emit(connextHandler, "Called")
-      .withArgs(destinationDomain, connextHandler.address, to, callData);
+    await expect(hashiHandler.xcall(xCallArgs))
+      .to.emit(hashiHandler, "Called")
+      .withArgs(destinationDomain, hashiHandler.address, to, callData);
   });
 });

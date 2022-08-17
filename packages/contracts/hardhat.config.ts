@@ -6,7 +6,7 @@ import "./tasks/sub-bridge-deploy";
 import "./tasks/sub-bridge-register";
 import "./tasks/sub-executor-deploy";
 import "./tasks/sub-handler-deploy";
-import "./tasks/sub-wrapped-nft-impl-deploy";
+import "./tasks/sub-wrapped-721-deploy";
 import "./tasks/verify";
 
 import * as dotenv from "dotenv";
@@ -16,7 +16,8 @@ import networks from "../shared/networks.json";
 
 dotenv.config();
 
-const accounts = process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [];
+const accounts = process.env.DEPLOYER_PRIVATE_KEY !== undefined ? [process.env.DEPLOYER_PRIVATE_KEY] : [];
+const ethersanApiKey = process.env.ETHERSCAN_API_KEY || "";
 
 const config: HardhatUserConfig = {
   solidity: "0.8.15",
@@ -47,8 +48,8 @@ const config: HardhatUserConfig = {
   },
   etherscan: {
     apiKey: {
-      rinkeby: process.env.ETHERSCAN_API_KEY || "",
-      goerli: process.env.ETHERSCAN_API_KEY || "",
+      rinkeby: ethersanApiKey,
+      goerli: ethersanApiKey,
     },
   },
 };

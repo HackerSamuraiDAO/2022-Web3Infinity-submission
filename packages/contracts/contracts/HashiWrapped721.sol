@@ -7,22 +7,22 @@ import "@openzeppelin/contracts-upgradeable/token/ERC721/ERC721Upgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721URIStorageUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/utils/introspection/ERC165Upgradeable.sol";
 
-import "./interfaces/IWrappedHashi721.sol";
+import "./interfaces/IHashiWrapped721.sol";
 
 //TODO: remove when prod
 import "hardhat/console.sol";
 
-contract WrappedHashi721 is
+contract HashiWrapped721 is
   Initializable,
   ERC165Upgradeable,
   OwnableUpgradeable,
   ERC721Upgradeable,
   ERC721URIStorageUpgradeable,
-  IWrappedHashi721
+  IHashiWrapped721
 {
   function initialize() public initializer {
     __Ownable_init();
-    __ERC721_init("WrappedHashi721", "WHASHI721");
+    __ERC721_init("HashiWrapped721", "HASHIW721");
   }
 
   function mint(
@@ -57,7 +57,7 @@ contract WrappedHashi721 is
     override(IERC165Upgradeable, ERC165Upgradeable, ERC721Upgradeable)
     returns (bool)
   {
-    return interfaceId == type(IWrappedHashi721).interfaceId || super.supportsInterface(interfaceId);
+    return interfaceId == type(IHashiWrapped721).interfaceId || super.supportsInterface(interfaceId);
   }
 
   function _burn(uint256 tokenId) internal virtual override(ERC721Upgradeable, ERC721URIStorageUpgradeable) {

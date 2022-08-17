@@ -7,14 +7,14 @@ import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 //TODO: remove when prod
 import "hardhat/console.sol";
 
-contract ConnextExecutor is Initializable, OwnableUpgradeable {
+contract HashiExecutor is Initializable, OwnableUpgradeable {
   address private _originSender;
   uint32 private _origin;
 
   event Executed(uint32 indexed originDomain, address indexed originSender, address indexed to, bytes callData);
 
   function initialize() public initializer {
-    __ConnextExecutor_init();
+    __HashiExecutor_init();
   }
 
   function execute(
@@ -26,7 +26,7 @@ contract ConnextExecutor is Initializable, OwnableUpgradeable {
     _origin = originDomain;
     _originSender = originSender_;
     (bool success, ) = to.call(callData);
-    require(success, "ConnextExecutor: execute failed");
+    require(success, "HashiExecutor: execute failed");
     emit Executed(originDomain, originSender_, to, callData);
     delete _origin;
     delete _originSender;
@@ -40,10 +40,10 @@ contract ConnextExecutor is Initializable, OwnableUpgradeable {
     return _origin;
   }
 
-  function __ConnextExecutor_init() internal onlyInitializing {
+  function __HashiExecutor_init() internal onlyInitializing {
     __Ownable_init_unchained();
-    __ConnextExecutor_init_unchained();
+    __HashiExecutor_init_unchained();
   }
 
-  function __ConnextExecutor_init_unchained() internal onlyInitializing {}
+  function __HashiExecutor_init_unchained() internal onlyInitializing {}
 }
