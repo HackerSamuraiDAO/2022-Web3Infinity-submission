@@ -27,19 +27,35 @@ import { Modal } from "../Modal";
 import { NetworkSelectOptions } from "./NetworkSelectOptions";
 import { NFT } from "./NFT";
 
+const defaultConsoleText =
+  "nfthashi is trustminimised crosschain bridge with multichain storage. select source and target network...";
+
 export const Main: React.FC = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-
   const [sourceChainId, setSourceChainId] = React.useState<ChainId>("4");
   const [targetChainId, setTargetChainId] = React.useState<ChainId>("5");
-
   const [nfts, setNFTs] = React.useState<NFTType[]>([]);
   const [selectedNFT, setSelectedNFT] = React.useState<NFTType>();
-
   const [isLoading, setIsLoading] = React.useState(false);
+  const [consoleMode, setConsoleMode] = React.useState<"normal" | "error">("normal");
+  const [consoleText, setConsoleText] = React.useState([defaultConsoleText]);
   const { address } = useAccount();
   const { data: signer } = useSigner();
   const { chain } = useNetwork();
+
+  const log = (...text: string[]) => {
+    setConsoleMode("normal");
+    setConsoleText(text);
+  };
+  const error = (...text: string[]) => {
+    setConsoleMode("error");
+    setConsoleText(text);
+  };
+
+  const closeModal = () => {
+    log(defaultConsoleText);
+    onClose();
+  };
 
   const bridge = async () => {
     if (!selectedNFT || !address || !signer || !chain) {
@@ -47,48 +63,37 @@ export const Main: React.FC = () => {
     }
     setIsLoading(true);
     try {
-      console.log("processing bridge...");
-      console.log("checking network start...");
-
+      log("bridge start, checking connected network...");
       const sorceNetwork = networks[sourceChainId];
       const targetNetwork = networks[targetChainId];
       const connectedChainId = chain.id.toString();
       if (connectedChainId !== sourceChainId) {
-        console.log("wrong network detected");
-        alert(`Please conncet to ${sorceNetwork.name}`);
+        error("wrong network detected, please connect to", sorceNetwork.name);
         return;
       }
-      console.log("checking network end");
       const nftContract = new ethers.Contract(selectedNFT.contractAddress, erc721ABI, signer);
-      console.log("checking approval start...");
+      log("connected network is ok, checking approval status...");
       const resolved = await Promise.all([
         nftContract.getApproved(selectedNFT.tokenId).catch(() => false),
         nftContract.isApprovedForAll(address, sorceNetwork.contracts.bridge).catch(() => false),
       ]);
       const approved = resolved.some((v) => v === true);
-      console.log("approved", approved);
       const bridgeContractAddress = sorceNetwork.contracts.bridge;
       if (!approved) {
-        console.log("sending approve tx...");
+        log("not approved, confirm approve tx...");
         const tx = await nftContract.setApprovalForAll(bridgeContractAddress, true);
-        console.log("approve tx send", tx.hash);
-        console.log("waiting for tx confirmation");
+        log("approve tx send", tx.hash, "waiting for tx confirmation...");
         await tx.wait();
-        console.log("approved");
       }
 
-      console.log("checking approval end");
       const bridge = new ethers.Contract(bridgeContractAddress, Hashi721BridgeArtifact.abi, signer);
-
-      console.log("upload content to ipfs via NFT Storage...");
+      log("approval status is ok, uploading content to ipfs via nft storage...");
       const { data: tokenURI } = await axios.post("/api/storage/add", {
         chainId: sourceChainId,
         contractAddress: selectedNFT.contractAddress,
         tokenId: selectedNFT.tokenId,
       });
-      console.log("uploaded to ipfs and token uri is", tokenURI);
-
-      console.log("start bridge tx...");
+      log(`token uri is <${tokenURI}>.`, "confirm bridge tx...");
       const { hash } = await bridge.xSend(
         selectedNFT.contractAddress,
         address,
@@ -97,16 +102,17 @@ export const Main: React.FC = () => {
         targetNetwork.domain,
         tokenURI
       );
-      console.log("tx hash", hash);
+      log("tx hash", hash);
       clear();
     } catch (e: any) {
-      console.error(e.message);
+      error(e.message);
     } finally {
       setIsLoading(false);
     }
   };
 
   const clear = () => {
+    setConsoleText([defaultConsoleText]);
     setSelectedNFT(undefined);
   };
 
@@ -122,15 +128,16 @@ export const Main: React.FC = () => {
     }
     setIsLoading(true);
     try {
+      log("selected", `${networks[sourceChainId].name.toLowerCase()},`, "loading nft from moralis api...");
       const { data } = await axios.get(`/api/nfts?chainId=${sourceChainId}&address=${address}`);
       if (data.length) {
         setNFTs(data);
         onOpen();
       } else {
-        console.log("no nft detected");
+        error("no nft detected");
       }
     } catch (e: any) {
-      console.error(e.message);
+      error(e.message);
     } finally {
       setIsLoading(false);
     }
@@ -160,17 +167,10 @@ export const Main: React.FC = () => {
     setTargetChainId(inputValue);
   };
 
-  const handleNFTSelected = (index: number) => {
+  const handleNFTSelected = async (index: number) => {
     setSelectedNFT(nfts[index]);
-    onClose();
-  };
-
-  const openExproler = (chainId: ChainId, contractAddress: string) => {
-    const newTab = window.open(`${networks[chainId].explorer}/address/${contractAddress}`, "_blank");
-    if (!newTab) {
-      return;
-    }
-    newTab.focus();
+    closeModal();
+    log("nft is selected. it is going to be bridged to", "address", "at", "network.", "click bridge to proceed...");
   };
 
   React.useEffect(() => {
@@ -178,98 +178,117 @@ export const Main: React.FC = () => {
   }, [address]);
 
   return (
-    <Box shadow="base" borderRadius="2xl" p="4" backgroundColor={config.styles.background.color.main}>
-      <Stack spacing="4">
-        <HStack justify={"space-between"} align="center">
-          <VStack w="full">
-            <Text fontSize="sm" fontWeight={"bold"} textAlign="center" color={config.styles.text.color.primary}>
-              Source ChainId
-            </Text>
-            <Select
-              variant={"filled"}
-              onChange={handleSourceChainIdChange}
-              value={sourceChainId}
-              rounded={"2xl"}
-              size="lg"
-              fontSize={"sm"}
-            >
-              <NetworkSelectOptions />
-            </Select>
-          </VStack>
-          <IconButton
-            color="gray.800"
-            onClick={swapChainId}
-            aria-label="swap"
-            icon={<VscArrowSwap size="12px" />}
-            background="white"
-            rounded="full"
-            size="xs"
-            variant={"outline"}
-          />
-          <VStack w="full">
-            <Text fontSize="sm" fontWeight={"bold"} textAlign="center" color={config.styles.text.color.primary}>
-              Target ChainId
-            </Text>
-            <Select
-              variant={"filled"}
-              onChange={handleTargetChainIdChange}
-              value={targetChainId}
-              rounded={"2xl"}
-              size="lg"
-              fontSize={"sm"}
-            >
-              <NetworkSelectOptions />
-            </Select>
-          </VStack>
-        </HStack>
-        {selectedNFT && (
-          <Flex justify={"center"} p="4">
-            <NFT
-              nft={selectedNFT}
-              onClick={() => openExproler(selectedNFT.chainId as ChainId, selectedNFT.contractAddress)}
+    <Stack spacing="4">
+      <Box shadow="base" borderRadius="2xl" p="4" backgroundColor={config.styles.background.color.main}>
+        <Stack spacing="4">
+          <HStack justify={"space-between"} align="center">
+            <VStack w="full">
+              <Text fontSize="sm" fontWeight={"bold"} textAlign="center" color={config.styles.text.color.primary}>
+                Source ChainId
+              </Text>
+              <Select
+                variant={"filled"}
+                onChange={handleSourceChainIdChange}
+                value={sourceChainId}
+                rounded={"2xl"}
+                size="lg"
+                fontSize={"sm"}
+              >
+                <NetworkSelectOptions />
+              </Select>
+            </VStack>
+            <IconButton
+              color="gray.800"
+              onClick={swapChainId}
+              aria-label="swap"
+              icon={<VscArrowSwap size="12px" />}
+              background="white"
+              rounded="full"
+              size="xs"
+              variant={"outline"}
             />
-          </Flex>
-        )}
-        <ConnectWalletWrapper variant="outline">
-          <HStack>
-            {!selectedNFT ? (
-              <Button
-                w="full"
-                variant="outline"
-                rounded={config.styles.button.rounded}
-                size={config.styles.button.size}
-                fontSize={config.styles.button.fontSize}
-                onClick={openSelectNFTModal}
-                isLoading={isLoading}
-                loadingText="Loading NFT"
+            <VStack w="full">
+              <Text fontSize="sm" fontWeight={"bold"} textAlign="center" color={config.styles.text.color.primary}>
+                Target ChainId
+              </Text>
+              <Select
+                variant={"filled"}
+                onChange={handleTargetChainIdChange}
+                value={targetChainId}
+                rounded={"2xl"}
+                size="lg"
+                fontSize={"sm"}
               >
-                Select NFT
-              </Button>
-            ) : (
-              <Button
-                w="full"
-                variant="outline"
-                rounded={config.styles.button.rounded}
-                size={config.styles.button.size}
-                fontSize={config.styles.button.fontSize}
-                onClick={bridge}
-                isLoading={isLoading}
-              >
-                Bridge
-              </Button>
-            )}
+                <NetworkSelectOptions />
+              </Select>
+            </VStack>
           </HStack>
-          <Modal isOpen={isOpen} onClose={onClose} header="Select NFT">
-            <Flex justify={"center"}>
-              <SimpleGrid columns={2} gap={4}>
-                {nfts.map((nft, i) => {
-                  return <NFT nft={nft} key={i} onClick={() => handleNFTSelected(i)} />;
-                })}
-              </SimpleGrid>
+          {selectedNFT && (
+            <Flex justify={"center"} pt="4">
+              <Box maxW="64">
+                <NFT nft={selectedNFT} />
+              </Box>
             </Flex>
-          </Modal>
-        </ConnectWalletWrapper>
-      </Stack>
-    </Box>
+          )}
+          <ConnectWalletWrapper variant="outline">
+            <HStack>
+              {!selectedNFT ? (
+                <Button
+                  w="full"
+                  variant="outline"
+                  rounded={config.styles.button.rounded}
+                  size={config.styles.button.size}
+                  fontSize={config.styles.button.fontSize}
+                  onClick={openSelectNFTModal}
+                  isLoading={isLoading}
+                  loadingText="Loading NFT"
+                >
+                  Select NFT
+                </Button>
+              ) : (
+                <Button
+                  w="full"
+                  variant="outline"
+                  rounded={config.styles.button.rounded}
+                  size={config.styles.button.size}
+                  fontSize={config.styles.button.fontSize}
+                  onClick={bridge}
+                  isLoading={isLoading}
+                >
+                  Bridge
+                </Button>
+              )}
+            </HStack>
+            <Modal isOpen={isOpen} onClose={closeModal} header="Select NFT">
+              <Flex justify={"center"}>
+                <SimpleGrid columns={2} gap={4}>
+                  {nfts.map((nft, i) => {
+                    return <NFT nft={nft} key={i} onClick={() => handleNFTSelected(i)} />;
+                  })}
+                </SimpleGrid>
+              </Flex>
+            </Modal>
+          </ConnectWalletWrapper>
+        </Stack>
+      </Box>
+      <Box shadow="base" borderRadius="md" p="4" h="20" backgroundColor={"gray.800"} opacity="90%">
+        <Text color="blue.400" fontSize="xs">
+          {`NFTHashi > `}
+          {consoleText.map((t, i) => {
+            return (
+              <Text
+                key={`console-${i}`}
+                color={consoleMode === "normal" ? "white" : "red.400"}
+                fontSize="xs"
+                as="span"
+                m="0.5"
+              >
+                {t}
+              </Text>
+            );
+          })}
+        </Text>
+      </Box>
+    </Stack>
   );
 };
