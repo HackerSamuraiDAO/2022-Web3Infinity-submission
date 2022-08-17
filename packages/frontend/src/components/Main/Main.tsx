@@ -45,61 +45,73 @@ export const Main: React.FC = () => {
     if (!selectedNFT || !address || !signer || !chain) {
       return;
     }
-    console.log("processing bridge...");
-    console.log("checking network start...");
+    setIsLoading(true);
+    try {
+      console.log("processing bridge...");
+      console.log("checking network start...");
 
-    const sorceNetwork = networks[sourceChainId];
-    const targetNetwork = networks[targetChainId];
-    const connectedChainId = chain.id.toString();
-    if (connectedChainId !== sourceChainId) {
-      console.log("wrong network detected");
-      alert(`Please conncet to ${sorceNetwork.name}`);
-      return;
+      const sorceNetwork = networks[sourceChainId];
+      const targetNetwork = networks[targetChainId];
+      const connectedChainId = chain.id.toString();
+      if (connectedChainId !== sourceChainId) {
+        console.log("wrong network detected");
+        alert(`Please conncet to ${sorceNetwork.name}`);
+        return;
+      }
+      console.log("checking network end");
+      const nftContract = new ethers.Contract(selectedNFT.contractAddress, erc721ABI, signer);
+      console.log("checking approval start...");
+      const resolved = await Promise.all([
+        nftContract.getApproved(selectedNFT.tokenId).catch(() => false),
+        nftContract.isApprovedForAll(address, sorceNetwork.contracts.bridge).catch(() => false),
+      ]);
+      const approved = resolved.some((v) => v === true);
+      console.log("approved", approved);
+      const bridgeContractAddress = sorceNetwork.contracts.bridge;
+      if (!approved) {
+        console.log("sending approve tx...");
+        const tx = await nftContract.setApprovalForAll(bridgeContractAddress, true);
+        console.log("approve tx send", tx.hash);
+        console.log("waiting for tx confirmation");
+        await tx.wait();
+        console.log("approved");
+      }
+
+      console.log("checking approval end");
+      const bridge = new ethers.Contract(bridgeContractAddress, Hashi721BridgeArtifact.abi, signer);
+
+      console.log("upload content to ipfs via NFT Storage...");
+      const { data: cid } = await axios.post("/api/storage/add", {
+        chainId: sourceChainId,
+        contractAddress: selectedNFT.contractAddress,
+        tokenId: selectedNFT.tokenId,
+      });
+      console.log("uploaded to ipfs", cid);
+
+      console.log("start bridge tx...");
+      const { hash } = await bridge.xSend(
+        selectedNFT.contractAddress,
+        address,
+        address,
+        selectedNFT.tokenId,
+        targetNetwork.domain,
+        `ipfs://${cid}`
+      );
+      console.log("tx hash", hash);
+      clear();
+    } catch (e: any) {
+      console.error(e.message);
+    } finally {
+      setIsLoading(false);
     }
-    console.log("checking network end");
-    const nftContract = new ethers.Contract(selectedNFT.contractAddress, erc721ABI, signer);
-    console.log("checking approval start...");
-    const resolved = await Promise.all([
-      nftContract.getApproved(selectedNFT.tokenId).catch(() => false),
-      nftContract.isApprovedForAll(address, sorceNetwork.contracts.bridge).catch(() => false),
-    ]);
-    const approved = resolved.some((v) => v === true);
-    console.log("approved", approved);
-    const bridgeContractAddress = sorceNetwork.contracts.bridge;
-    if (!approved) {
-      console.log("sending approve tx...");
-      const tx = await nftContract.setApprovalForAll(bridgeContractAddress, true);
-      console.log("approve tx send", tx.hash);
-      console.log("waiting for tx confirmation");
-      await tx.wait();
-      console.log("approved");
-    }
+  };
 
-    console.log("checking approval end");
-    const bridge = new ethers.Contract(bridgeContractAddress, Hashi721BridgeArtifact.abi, signer);
-
-    console.log("upload content to ipfs via NFT Storage...");
-    const { data: cid } = await axios.post("/api/storage/add", {
-      chainId: sourceChainId,
-      contractAddress: selectedNFT.contractAddress,
-      tokenId: selectedNFT.tokenId,
-    });
-    console.log("uploaded to ipfs", cid);
-
-    console.log("start bridge tx...");
-    const { hash } = await bridge.xSend(
-      selectedNFT.contractAddress,
-      address,
-      address,
-      selectedNFT.tokenId,
-      targetNetwork.domain,
-      `ipfs://${cid}`
-    );
-    console.log("tx hash", hash);
+  const clear = () => {
+    setSelectedNFT(undefined);
   };
 
   const swapChainId = () => {
-    setSelectedNFT(undefined);
+    clear();
     setSourceChainId(targetChainId);
     setTargetChainId(sourceChainId);
   };
@@ -109,14 +121,19 @@ export const Main: React.FC = () => {
       return;
     }
     setIsLoading(true);
-    const { data } = await axios.get(`/api/nfts?chainId=${sourceChainId}&address=${address}`);
-    if (data.length) {
-      setNFTs(data);
-      onOpen();
-    } else {
-      console.log("no nft detected");
+    try {
+      const { data } = await axios.get(`/api/nfts?chainId=${sourceChainId}&address=${address}`);
+      if (data.length) {
+        setNFTs(data);
+        onOpen();
+      } else {
+        console.log("no nft detected");
+      }
+    } catch (e: any) {
+      console.error(e.message);
+    } finally {
+      setIsLoading(false);
     }
-    setIsLoading(false);
   };
 
   const handleSourceChainIdChange = async (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -124,7 +141,7 @@ export const Main: React.FC = () => {
     if (!isChainId(inputValue)) {
       return;
     }
-    setSelectedNFT(undefined);
+    clear();
     if (inputValue === targetChainId) {
       setTargetChainId(sourceChainId);
     }
@@ -136,7 +153,7 @@ export const Main: React.FC = () => {
     if (!isChainId(inputValue)) {
       return;
     }
-    setSelectedNFT(undefined);
+    clear();
     if (inputValue === sourceChainId) {
       setSourceChainId(targetChainId);
     }
@@ -148,8 +165,20 @@ export const Main: React.FC = () => {
     onClose();
   };
 
+  const openExproler = (chainId: ChainId, contractAddress: string) => {
+    const newTab = window.open(`${networks[chainId].explorer}/address/${contractAddress}`, "_blank");
+    if (!newTab) {
+      return;
+    }
+    newTab.focus();
+  };
+
+  React.useEffect(() => {
+    clear();
+  }, [address]);
+
   return (
-    <Box boxShadow={"base"} borderRadius="2xl" p="4" backgroundColor={config.styles.background.color.main}>
+    <Box shadow="base" borderRadius="2xl" p="4" backgroundColor={config.styles.background.color.main}>
       <Stack spacing="4">
         <HStack justify={"space-between"} align="center">
           <VStack w="full">
@@ -195,7 +224,7 @@ export const Main: React.FC = () => {
         </HStack>
         {selectedNFT && (
           <Flex justify={"center"} p="4">
-            <NFT nft={selectedNFT} />
+            <NFT nft={selectedNFT} onClick={() => openExproler(selectedNFT.chainId, selectedNFT.contractAddress)} />
           </Flex>
         )}
         <ConnectWalletWrapper variant="outline">
@@ -203,7 +232,7 @@ export const Main: React.FC = () => {
             {!selectedNFT ? (
               <Button
                 w="full"
-                variant={"outline"}
+                variant="outline"
                 rounded={config.styles.button.rounded}
                 size={config.styles.button.size}
                 fontSize={config.styles.button.fontSize}
@@ -216,11 +245,12 @@ export const Main: React.FC = () => {
             ) : (
               <Button
                 w="full"
-                variant={"outline"}
+                variant="outline"
                 rounded={config.styles.button.rounded}
                 size={config.styles.button.size}
                 fontSize={config.styles.button.fontSize}
                 onClick={bridge}
+                isLoading={isLoading}
               >
                 Bridge
               </Button>
@@ -228,7 +258,7 @@ export const Main: React.FC = () => {
           </HStack>
           <Modal isOpen={isOpen} onClose={onClose} header="Select NFT">
             <Flex justify={"center"}>
-              <SimpleGrid columns={2} gap={8}>
+              <SimpleGrid columns={2} gap={4}>
                 {nfts.map((nft, i) => {
                   return <NFT nft={nft} key={i} onClick={() => handleNFTSelected(i)} />;
                 })}
