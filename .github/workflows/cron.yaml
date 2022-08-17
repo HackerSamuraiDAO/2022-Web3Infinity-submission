@@ -1,0 +1,13 @@
+name: 15-minute-cron
+on:
+  schedule:
+    - cron: "*/5 * * * *"
+jobs:
+  cron:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Call Relayer
+        run: |
+          curl --request POST \
+          --url 'https://nfthashi-2022-web3-infinity-submission.vercel.app/api/relayer/run' \
+          --header 'Authorization: Bearer ${{ secrets.API_SECRET_KEY }}'

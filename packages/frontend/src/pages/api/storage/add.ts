@@ -5,7 +5,11 @@ import { add } from "../../../lib/storage/index";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const { chainId, contractAddress, tokenId } = req.body;
-  console.log(chainId, contractAddress, tokenId);
+  if (req.method !== "POST") {
+    res.setHeader("Allow", "POST");
+    res.status(405).end("Method Not Allowed");
+    return;
+  }
   if (typeof chainId !== "string" || !isChainId(chainId)) {
     return res.status(400).json({ error: "network is invalid" });
   }

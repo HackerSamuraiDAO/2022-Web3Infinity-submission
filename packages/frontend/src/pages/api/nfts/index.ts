@@ -4,6 +4,11 @@ import { isChainId } from "../../../../../contracts/types/network";
 import { getNFTs } from "../../../lib/moralis";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  if (req.method !== "GET") {
+    res.setHeader("Allow", "GET");
+    res.status(405).end("Method Not Allowed");
+    return;
+  }
   const { chainId, address } = req.query;
   if (typeof chainId !== "string" || !isChainId(chainId)) {
     return res.status(400).json({ error: "network is invalid" });
