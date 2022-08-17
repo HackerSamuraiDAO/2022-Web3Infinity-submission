@@ -1,1 +1,28 @@
-{"4":{"name":"Rinkeby","domainId":1111,"contracts":{"wrapped721":"0x3FE2d12EC8C1070aD28C35F1B2A9Bedff0a4649E","executor":"0xEd07Ab11F28464b8ACE7dF15f68134d820250E12","handler":"0x210282778aba19B4a96D6Ec30AcD717c2Bfd88Fe","bridge":"0xd4daddD0F29F386a463D2BAc3b7E2D2c5f4ADf3D","faucet":"0x5B26da852945f37638Ff987c060022e8159a57c5"},"explorer":"https://rinkeby.etherscan.io/","rpc":"https://rinkeby.infura.io/v3/95f65ab099894076814e8526f52c9149"},"5":{"name":"Goerli","domainId":3331,"contracts":{"wrapped721":"0xa190B79059A577921f0245fb319C7b5106e87eae","executor":"0x3633199830B60C3b945ACE63bf472398A013353D","handler":"0x386B7ECafcfD20f2E670aA1430b499DF15194C2c","bridge":"0xAE481e69d13f2131C8DbBa20546e52c2440127ea","faucet":"0x35de708c2355B5f02c2F5bFB800E22d4Bb40233A"},"explorer":"https://goerli.etherscan.io/","rpc":"https://goerli.infura.io/v3/95f65ab099894076814e8526f52c9149"}}
+{
+  "4": {
+    "name": "Rinkeby",
+    "domain": 1111,
+    "contracts": {
+      "wrapped721": "0x03751498B4d13b564dfDC0ca67Dd06E48caac265",
+      "executor": "0x0eac01e7e636eB023e383671946375785F600a2d",
+      "handler": "0x61Fc49Ea27D0CA6B0F807F9E56cD3536956a61A7",
+      "bridge": "0x13cBa77fAae50d99466752b4810C81DD89Ad98B0",
+      "faucet": "0x5B26da852945f37638Ff987c060022e8159a57c5"
+    },
+    "explorer": "https://rinkeby.etherscan.io/",
+    "rpc": "https://rinkeby.infura.io/v3/95f65ab099894076814e8526f52c9149"
+  },
+  "5": {
+    "name": "Goerli",
+    "domain": 3331,
+    "contracts": {
+      "wrapped721": "0x48D438CD1F7D287397bb2ACD4A76Cd5e45523217",
+      "executor": "0xdCa8A29429865011d6E43E22caecFAEeC6c18BdA",
+      "handler": "0x827f91Ee77fF96b5ac95Ac20C8335774F2dbdb9F",
+      "bridge": "0x75c5C1ce68E3E2799fEF5E4cAC11864a1394173b",
+      "faucet": "0x35de708c2355B5f02c2F5bFB800E22d4Bb40233A"
+    },
+    "explorer": "https://goerli.etherscan.io/",
+    "rpc": "https://goerli.infura.io/v3/95f65ab099894076814e8526f52c9149"
+  }
+}

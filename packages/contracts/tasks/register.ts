@@ -18,7 +18,7 @@ task("register", "integration register").setAction(async (_, { network, run }) =
   }
   for (const [key, value] of Object.entries(networks)) {
     if (key !== chainId) {
-      const { domainId: opponentDomainNum, contracts } = value;
+      const { domain: opponentDomainNum, contracts } = value;
       const { bridge: opponentContractAddress } = contracts;
       const opponentDomain = opponentDomainNum.toString();
       await run("sub-bridge-register", { selfContractAddress, opponentDomain, opponentContractAddress });

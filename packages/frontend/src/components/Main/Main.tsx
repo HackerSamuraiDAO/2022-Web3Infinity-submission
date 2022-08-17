@@ -77,14 +77,15 @@ export const Main: React.FC = () => {
     console.log("checking approval end");
     const bridge = new ethers.Contract(bridgeContractAddress, Hashi721BridgeArtifact.abi, signer) as Hashi721Bridge;
     console.log("start bridge tx...");
-    await bridge.xSend(
+    const { hash } = await bridge.xSend(
       selectedNFT.contractAddress,
       address,
       address,
       selectedNFT.tokenId,
-      targetNetwork.domainId,
+      targetNetwork.domain,
       true
     );
+    console.log("tx hash", hash);
   };
 
   const swapChainId = () => {
@@ -99,9 +100,6 @@ export const Main: React.FC = () => {
     }
     setIsLoading(true);
     const { data } = await axios.get(`/api/nfts?chainId=${sourceChainId}&address=${address}`);
-    await axios.post("/api/relayer/run", {
-      chainId: sourceChainId,
-    });
     if (data.length) {
       setNFTs(data);
       onOpen();

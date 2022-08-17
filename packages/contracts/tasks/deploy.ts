@@ -12,8 +12,8 @@ task("deploy", "deploy").setAction(async (_, { network, run }) => {
     console.log("network invalid");
     return;
   }
-  const { domainId } = networks[chainId];
-  const selfDomain = domainId.toString();
+  const { domain } = networks[chainId];
+  const selfDomain = domain.toString();
   const wrapped721 = await run("sub-wrapped-721-deploy");
   const executor = await run("sub-executor-deploy");
   const handler = await run("sub-handler-deploy", { executor });
