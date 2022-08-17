@@ -29,7 +29,7 @@ export const add = async (chainId: ChainId, contractAddress: string, tokenId: st
 export const getTokenMetadata = async (chainId: ChainId, contractAddress: string, tokenId: string) => {
   const network = networks[chainId];
   const provider = new ethers.providers.JsonRpcProvider(network.rpc);
-  const erc721 = <ERC721>new ethers.Contract(contractAddress, ERC721Artifact.abi, provider);
+  const erc721 = new ethers.Contract(contractAddress, ERC721Artifact.abi, provider);
   const tokenURI = await erc721.tokenURI(tokenId).catch(() => "");
   if (tokenURI) {
     const { data } = await axios.get(tokenURI);
