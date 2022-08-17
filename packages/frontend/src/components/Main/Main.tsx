@@ -224,7 +224,10 @@ export const Main: React.FC = () => {
         </HStack>
         {selectedNFT && (
           <Flex justify={"center"} p="4">
-            <NFT nft={selectedNFT} onClick={() => openExproler(selectedNFT.chainId, selectedNFT.contractAddress)} />
+            <NFT
+              nft={selectedNFT}
+              onClick={() => openExproler(selectedNFT.chainId as ChainId, selectedNFT.contractAddress)}
+            />
           </Flex>
         )}
         <ConnectWalletWrapper variant="outline">
