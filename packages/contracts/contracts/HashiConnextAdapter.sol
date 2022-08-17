@@ -12,7 +12,7 @@ import "@connext/nxtp-contracts/contracts/core/connext/interfaces/IConnextHandle
 //TODO: remove when prod
 import "hardhat/console.sol";
 
-contract HashiConnextAdapter is Initializable, OwnableUpgradeable, ERC165Upgradeable {
+abstract contract HashiConnextAdapter is Initializable, OwnableUpgradeable, ERC165Upgradeable {
   mapping(uint32 => address) private _bridgeContracts;
 
   address private _connext;
@@ -28,13 +28,6 @@ contract HashiConnextAdapter is Initializable, OwnableUpgradeable, ERC165Upgrade
     address expectedBridgeContract = getBridgeContract(domain);
     require(originSender == expectedBridgeContract, "HashiConnextAdapter: origin sender invalid");
     _;
-  }
-
-  function initialize(
-    uint32 selfDomain,
-    address connext
-  ) public initializer {
-    __HashiConnextAdapter_init(selfDomain, connext);
   }
 
   function setBridgeContract(uint32 domain, address bridgeContract) public onlyOwner {

@@ -7,7 +7,6 @@ import "@connext/nxtp-contracts/contracts/core/connext/interfaces/IExecutor.sol"
 import "hardhat/console.sol";
 
 contract MockBridge {
-
   event Called(uint32 origin, address originSender);
 
   function execute(bool success) public {

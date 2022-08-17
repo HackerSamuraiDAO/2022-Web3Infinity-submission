@@ -14,6 +14,7 @@ import "./interfaces/IWrappedHashi721.sol";
 //TODO: remove when prod
 import "hardhat/console.sol";
 
+//TODO: add domain check
 contract Hashi721Bridge is Initializable, ERC165Upgradeable, HashiConnextAdapter {
   mapping(address => mapping(uint256 => uint32)) private _destinations;
   mapping(address => address) private _contracts;
@@ -52,7 +53,7 @@ contract Hashi721Bridge is Initializable, ERC165Upgradeable, HashiConnextAdapter
     } else {
       birthChainNFTContractAddress = _contracts[processingNFTContractAddress];
       birthChainDomain = _domains[processingNFTContractAddress];
-      require(destinationDomain == birthChainDomain, "Hashi721Bridge: invalid destination domain");
+      // require(destinationDomain == birthChainDomain, "Hashi721Bridge: invalid destination domain");
       IWrappedHashi721(processingNFTContractAddress).burn(tokenId);
     }
     bytes memory callData = abi.encodeWithSelector(
@@ -77,7 +78,7 @@ contract Hashi721Bridge is Initializable, ERC165Upgradeable, HashiConnextAdapter
     if (birthChainDomain == selfDomain) {
       address executor = getExecutor();
       uint32 domain = _getOrigin(executor);
-      require(_destinations[birthChainNFTContractAddress][tokenId] == domain, "Hashi721Bridge: invalid bridge");
+      // require(_destinations[birthChainNFTContractAddress][tokenId] == domain, "Hashi721Bridge: invalid bridge");
       IERC721Upgradeable(birthChainNFTContractAddress).safeTransferFrom(address(this), to, tokenId);
       delete _destinations[birthChainNFTContractAddress][tokenId];
     } else {
@@ -95,10 +96,6 @@ contract Hashi721Bridge is Initializable, ERC165Upgradeable, HashiConnextAdapter
       }
       IWrappedHashi721(processingNFTContractAddress).mint(to, tokenId, tokenURI);
     }
-  }
-
-  function getDestination(address contractAddress, uint256 tokenId) public view returns (uint32) {
-    return _destinations[contractAddress][tokenId];
   }
 
   // solhint-disable-next-line func-name-mixedcase

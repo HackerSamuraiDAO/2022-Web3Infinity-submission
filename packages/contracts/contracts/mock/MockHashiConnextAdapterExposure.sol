@@ -7,9 +7,13 @@ import "../HashiConnextAdapter.sol";
 import "hardhat/console.sol";
 
 contract MockHashiConnextAdapterExposure is HashiConnextAdapter {
-  function testOnlyExecutor() public onlyExecutor {}  
+  function initialize(uint32 selfDomain, address connext) public initializer {
+    __HashiConnextAdapter_init(selfDomain, connext);
+  }
+
+  function testOnlyExecutor() public onlyExecutor {}
 
   function xcall(uint32 destinationdomain, bytes memory callData) public {
     _xcall(destinationdomain, callData);
-  }  
+  }
 }
