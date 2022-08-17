@@ -16,9 +16,11 @@ Also, we want to get better feedback and support in this hackathon.
 
 We added the IPFS metadata uploading function and add-on logic for content verification for the cross-chain messaging relayer.
 
-For this update, we modified a lot of smart contracts, frontend, and backend.
-
 ![How it works](https://raw.githubusercontent.com/nfthashi/2022-Web3Infinity-submission/main/docs/how-it-works.png)
+
+Relayer is called via github actions cron for simple development for this hackathon
+
+![Relayer](https://raw.githubusercontent.com/nfthashi/2022-Web3Infinity-submission/main/docs/relayer.png)
 
 ## How we built it
 
