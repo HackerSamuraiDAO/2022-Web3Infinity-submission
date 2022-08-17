@@ -4,6 +4,7 @@ import {
   Flex,
   HStack,
   IconButton,
+  Link,
   Select,
   SimpleGrid,
   Stack,
@@ -22,6 +23,7 @@ import Hashi721BridgeArtifact from "../../../../contracts/artifacts/contracts/Ha
 import networks from "../../../../contracts/networks.json";
 import { ChainId, isChainId } from "../../../../contracts/types/network";
 import config from "../../../config.json";
+import { addToLocalStorageTxList } from "../../lib/utils";
 import { NFT as NFTType } from "../../types/nft";
 import { ConnectWalletWrapper } from "../ConnectWalletWrapper";
 import { Modal } from "../Modal";
@@ -29,7 +31,7 @@ import { NetworkSelectOptions } from "./NetworkSelectOptions";
 import { NFT } from "./NFT";
 
 const defaultConsoleText =
-  "nfthashi is trustminimised crosschain bridge with multichain storage. select source and target network...";
+  "nfthashi is trustminimised crosschain bridge with multichain storage. connect wallet, select source and target network, then click select nft...";
 
 export const Main: React.FC = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -107,6 +109,7 @@ export const Main: React.FC = () => {
       );
       clear();
       log("bridge tx sent", hash);
+      addToLocalStorageTxList(hash);
     } catch (e: any) {
       error(e.message);
     } finally {
@@ -133,12 +136,8 @@ export const Main: React.FC = () => {
     try {
       log("selected", `${networks[sourceChainId].name.toLowerCase()},`, "loading nft from moralis api...");
       const { data } = await axios.get(`/api/nfts?chainId=${sourceChainId}&address=${address}`);
-      if (data.length) {
-        setNFTs(data);
-        onOpen();
-      } else {
-        error("no nft detected");
-      }
+      setNFTs(data);
+      onOpen();
     } catch (e: any) {
       error(e.message);
     } finally {
@@ -185,7 +184,7 @@ export const Main: React.FC = () => {
       <Box shadow="base" borderRadius="2xl" p="4" backgroundColor={config.styles.background.color.main}>
         <span id="confettiReward" />
         <Stack spacing="4">
-          <HStack justify={"space-between"} align="center">
+          <HStack justify={"space-between"} align="center" spacing="2">
             <VStack w="full">
               <Text fontSize="sm" fontWeight={"bold"} textAlign="center" color={config.styles.text.color.primary}>
                 Source ChainId
@@ -201,16 +200,18 @@ export const Main: React.FC = () => {
                 <NetworkSelectOptions />
               </Select>
             </VStack>
-            <IconButton
-              color="gray.800"
-              onClick={swapChainId}
-              aria-label="swap"
-              icon={<VscArrowSwap size="12px" />}
-              background="white"
-              rounded="full"
-              size="xs"
-              variant={"outline"}
-            />
+            <Box pt="8">
+              <IconButton
+                color="gray.800"
+                onClick={swapChainId}
+                aria-label="swap"
+                icon={<VscArrowSwap size="12px" />}
+                background="white"
+                rounded="full"
+                size="xs"
+                variant={"outline"}
+              />
+            </Box>
             <VStack w="full">
               <Text fontSize="sm" fontWeight={"bold"} textAlign="center" color={config.styles.text.color.primary}>
                 Target ChainId
@@ -264,7 +265,12 @@ export const Main: React.FC = () => {
               )}
             </HStack>
             <Modal isOpen={isOpen} onClose={closeModal} header="Select NFT">
-              <Flex justify={"center"}>
+              <Text fontSize="xs" color={"blue"}>
+                <Link color={"blue"} onClick={() => console.log()}>
+                  Mint Test NFT from Faucet
+                </Link>
+              </Text>
+              <Flex justify={"center"} mt="8">
                 <SimpleGrid columns={2} gap={4}>
                   {nfts.map((nft, i) => {
                     return <NFT nft={nft} key={i} onClick={() => handleNFTSelected(i)} />;
@@ -275,10 +281,10 @@ export const Main: React.FC = () => {
           </ConnectWalletWrapper>
         </Stack>
       </Box>
-      <Box shadow="base" borderRadius="md" p="4" h="20" backgroundColor={"gray.800"} opacity="90%">
+      <Box shadow="base" borderRadius="md" p="4" h="24" backgroundColor={"gray.800"} opacity="90%">
         <Text color="blue.400" fontSize="xs">
           {`NFTHashi > `}
-          {consoleText.map((t, i) => {
+          {consoleText.map((text, i) => {
             return (
               <Text
                 key={`console-${i}`}
@@ -287,7 +293,7 @@ export const Main: React.FC = () => {
                 as="span"
                 m="0.5"
               >
-                {t}
+                {text}
               </Text>
             );
           })}

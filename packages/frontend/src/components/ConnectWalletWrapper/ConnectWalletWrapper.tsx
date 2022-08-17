@@ -11,10 +11,7 @@ export interface ConnectWalletWrapperProps {
   variant?: "outline";
 }
 
-export const ConnectWalletWrapper: React.FC<ConnectWalletWrapperProps> = ({
-  children,
-  variant,
-}) => {
+export const ConnectWalletWrapper: React.FC<ConnectWalletWrapperProps> = ({ children, variant }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { isWagmiConnected } = useIsWagmiConnected();
 
@@ -36,7 +33,7 @@ export const ConnectWalletWrapper: React.FC<ConnectWalletWrapperProps> = ({
         </Box>
       )}
       {isWagmiConnected && <Box>{children}</Box>}
-      <Modal onClose={onClose} isOpen={isOpen}>
+      <Modal onClose={onClose} isOpen={isOpen} header="Connect Wallet">
         <ConnectWallet callback={onClose} />
       </Modal>
     </Box>

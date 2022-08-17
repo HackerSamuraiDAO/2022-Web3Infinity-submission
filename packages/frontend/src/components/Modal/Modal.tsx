@@ -19,20 +19,10 @@ export interface ModalProps {
   onClose: () => void;
 }
 
-export const Modal: React.FC<ModalProps> = ({
-  header,
-  children,
-  isOpen,
-  onClose,
-}) => {
+export const Modal: React.FC<ModalProps> = ({ header, children, isOpen, onClose }) => {
   return (
     <Box>
-      <_Modal
-        isOpen={isOpen}
-        onClose={onClose}
-        isCentered
-        scrollBehavior={"inside"}
-      >
+      <_Modal isOpen={isOpen} onClose={onClose} isCentered scrollBehavior={"inside"}>
         <ModalOverlay />
         <ModalContent m="4">
           <ModalHeader>
@@ -43,7 +33,7 @@ export const Modal: React.FC<ModalProps> = ({
             )}
             <ModalCloseButton />
           </ModalHeader>
-          <ModalBody px="4" pt="4" pb="8">
+          <ModalBody px="6" pb="8">
             {children}
           </ModalBody>
         </ModalContent>
