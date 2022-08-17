@@ -287,9 +287,15 @@ export const Main: React.FC = () => {
               )}
             </HStack>
             <Modal isOpen={isOpen} onClose={closeModal} header="Select NFT">
-              <Button fontSize="xs" color={"blue"} onClick={mintNFTFromFaucet}>
-                Mint Test NFT from Faucet
-              </Button>
+              <Stack spacing="4">
+                <Button fontSize="xs" color={"blue"} onClick={mintNFTFromFaucet}>
+                  Mint Test NFT from Faucet
+                </Button>
+                <Text color={config.styles.text.color.primary} fontSize="xs">
+                  * Bridged NFT takes long to appear by moralis
+                </Text>
+              </Stack>
+
               <Flex justify={"center"} mt="8">
                 <SimpleGrid columns={2} gap={4}>
                   {nfts.map((nft, i) => {
