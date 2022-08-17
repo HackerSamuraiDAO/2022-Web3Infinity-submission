@@ -3,10 +3,10 @@
     "name": "Rinkeby",
     "domain": 1111,
     "contracts": {
-      "wrapped721": "0x03751498B4d13b564dfDC0ca67Dd06E48caac265",
-      "executor": "0x0eac01e7e636eB023e383671946375785F600a2d",
-      "handler": "0x61Fc49Ea27D0CA6B0F807F9E56cD3536956a61A7",
-      "bridge": "0x13cBa77fAae50d99466752b4810C81DD89Ad98B0",
+      "wrapped721": "0xBafe34792887b4F6c45AdC18A601Bf51A8277038",
+      "executor": "0x32f9A4253BaE5d305B3CA2D55FDA75BFCa78A0b9",
+      "handler": "0x48E89b9aa1FD618D5edb2cfD1630c551aF241BFB",
+      "bridge": "0x8B887e33bcc05aC7471aF44600202cfF507EC220",
       "faucet": "0x5B26da852945f37638Ff987c060022e8159a57c5"
     },
     "explorer": "https://rinkeby.etherscan.io/",
@@ -16,10 +16,10 @@
     "name": "Goerli",
     "domain": 3331,
     "contracts": {
-      "wrapped721": "0x48D438CD1F7D287397bb2ACD4A76Cd5e45523217",
-      "executor": "0xdCa8A29429865011d6E43E22caecFAEeC6c18BdA",
-      "handler": "0x827f91Ee77fF96b5ac95Ac20C8335774F2dbdb9F",
-      "bridge": "0x75c5C1ce68E3E2799fEF5E4cAC11864a1394173b",
+      "wrapped721": "0x50992338D301e9Ad05D5540488c988220a8C5280",
+      "executor": "0x6F54c9F897E52aD1aCb3802e9a411BCDa96Ae8ed",
+      "handler": "0x0A4D5dfEaa83D96D9ea396e71a2F64866609e8bd",
+      "bridge": "0x69e6Cf54369aA478d0B6dFc00F3C810Ae66a4F36",
       "faucet": "0x35de708c2355B5f02c2F5bFB800E22d4Bb40233A"
     },
     "explorer": "https://goerli.etherscan.io/",

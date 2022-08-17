@@ -85,32 +85,19 @@ describe("Unit Test for Hashi721Bridge", function () {
     await expect(
       selfHashi721Bridge
         .connect(malicious)
-        .xSend(mockNFT.address, holder.address, sendTo.address, mintedTokenId_1, opponentDomain, false)
+        .xSend(mockNFT.address, holder.address, sendTo.address, mintedTokenId_1, opponentDomain, "")
     ).to.revertedWith("Hashi721Bridge: invalid sender");
 
     await expect(
       selfHashi721Bridge
         .connect(holder)
-        .xSend(mockNFT.address, malicious.address, sendTo.address, mintedTokenId_1, opponentDomain, false)
+        .xSend(mockNFT.address, malicious.address, sendTo.address, mintedTokenId_1, opponentDomain, "")
     ).to.revertedWith("Hashi721Bridge: invalid from");
 
     await expect(
       selfHashi721Bridge
         .connect(holder)
-        .xSend(mockNFT.address, holder.address, sendTo.address, mintedTokenId_1, opponentDomain, false)
-    )
-      .to.emit(mockNFT, "Transfer")
-      .withArgs(holder.address, selfHashi721Bridge.address, mintedTokenId_1);
-  });
-
-  it("xSend: isTokenURIIncluded is true", async function () {
-    await selfHashi721Bridge.setBridgeContract(opponentDomain, opponentBridgeContract);
-    await mockNFT.connect(owner).mint(holder.address);
-    await mockNFT.connect(holder).setApprovalForAll(selfHashi721Bridge.address, true);
-    await expect(
-      selfHashi721Bridge
-        .connect(holder)
-        .xSend(mockNFT.address, holder.address, sendTo.address, mintedTokenId_1, opponentDomain, true)
+        .xSend(mockNFT.address, holder.address, sendTo.address, mintedTokenId_1, opponentDomain, "")
     )
       .to.emit(mockNFT, "Transfer")
       .withArgs(holder.address, selfHashi721Bridge.address, mintedTokenId_1);
@@ -164,7 +151,7 @@ describe("Unit Test for Hashi721Bridge", function () {
     await expect(
       selfHashi721Bridge
         .connect(holder)
-        .xSend(mockNFT.address, holder.address, sendTo.address, mintedTokenId_1, opponentDomain, false)
+        .xSend(mockNFT.address, holder.address, sendTo.address, mintedTokenId_1, opponentDomain, "")
     )
       .to.emit(mockNFT, "Transfer")
       .withArgs(holder.address, selfHashi721Bridge.address, mintedTokenId_1);
@@ -188,7 +175,7 @@ describe("Unit Test for Hashi721Bridge", function () {
     await expect(
       opponentHashi721Bridge
         .connect(sendTo)
-        .xSend(depoloyedNFT.address, sendTo.address, holder.address, mintedTokenId_1, selfDomain, false)
+        .xSend(depoloyedNFT.address, sendTo.address, holder.address, mintedTokenId_1, selfDomain, "")
     )
       .to.emit(depoloyedNFT, "Transfer")
       .withArgs(sendTo.address, NULL_ADDRESS, mintedTokenId_1);

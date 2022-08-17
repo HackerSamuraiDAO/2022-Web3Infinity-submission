@@ -36,15 +36,11 @@ contract Hashi721Bridge is Initializable, ERC165Upgradeable, HashiConnextAdapter
     address to,
     uint256 tokenId,
     uint32 destinationDomain,
-    bool isTokenURIIncluded
+    string memory tokenURI
   ) public {
     _validateAuthorization(processingNFTContractAddress, from, tokenId);
     address birthChainNFTContractAddress;
     uint32 birthChainDomain;
-    string memory tokenURI;
-    if (isTokenURIIncluded) {
-      tokenURI = IERC721MetadataUpgradeable(processingNFTContractAddress).tokenURI(tokenId);
-    }
     if (_contracts[processingNFTContractAddress] == address(0x0) && _domains[processingNFTContractAddress] == 0) {
       birthChainNFTContractAddress = processingNFTContractAddress;
       birthChainDomain = getSelfDomain();

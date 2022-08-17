@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 
 import { isChainId } from "../../../../../shared/types/network";
-import { addToIpfs, getTokenMetadata } from "../../../lib/storage/index";
+import { add } from "../../../lib/storage/index";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const { chainId, contractAddress, tokenId } = req.body;
@@ -15,7 +15,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   if (typeof tokenId !== "string") {
     return res.status(400).json({ error: "token id is invalid" });
   }
-  const metadata = await getTokenMetadata(chainId, contractAddress, tokenId);
-  const cid = await addToIpfs(JSON.stringify(metadata));
-  res.status(200).json(cid);
+  const tokenURI = await add(chainId, contractAddress, tokenId);
+  res.status(200).json(tokenURI);
 }
