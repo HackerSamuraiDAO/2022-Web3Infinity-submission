@@ -72,8 +72,8 @@ contract Hashi721Bridge is Initializable, ERC165Upgradeable, HashiConnextAdapter
   ) public onlyExecutor {
     uint32 selfDomain = getSelfDomain();
     if (birthChainDomain == selfDomain) {
-      address executor = getExecutor();
-      uint32 domain = _getOrigin(executor);
+      // address executor = getExecutor();
+      // uint32 domain = _getOrigin(executor);
       // require(_destinations[birthChainNFTContractAddress][tokenId] == domain, "Hashi721Bridge: invalid bridge");
       IERC721Upgradeable(birthChainNFTContractAddress).safeTransferFrom(address(this), to, tokenId);
       // delete _destinations[birthChainNFTContractAddress][tokenId];

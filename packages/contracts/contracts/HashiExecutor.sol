@@ -25,6 +25,7 @@ contract HashiExecutor is Initializable, OwnableUpgradeable {
   ) public onlyOwner {
     _origin = originDomain;
     _originSender = originSender_;
+    // solhint-disable-next-line avoid-low-level-calls
     (bool success, ) = to.call(callData);
     require(success, "HashiExecutor: execute failed");
     emit Executed(originDomain, originSender_, to, callData);
@@ -40,10 +41,12 @@ contract HashiExecutor is Initializable, OwnableUpgradeable {
     return _origin;
   }
 
+  // solhint-disable-next-line func-name-mixedcase
   function __HashiExecutor_init() internal onlyInitializing {
     __Ownable_init_unchained();
     __HashiExecutor_init_unchained();
   }
 
+  // solhint-disable-next-line func-name-mixedcase, no-empty-blocks
   function __HashiExecutor_init_unchained() internal onlyInitializing {}
 }

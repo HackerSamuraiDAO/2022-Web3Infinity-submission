@@ -26,10 +26,12 @@ contract HashiHandler is Initializable {
     return _executor;
   }
 
+  // solhint-disable-next-line func-name-mixedcase
   function __HashiHandler_init(IExecutor executor) internal onlyInitializing {
     __HashiHandler_init_unchained(executor);
   }
 
+  // solhint-disable-next-line func-name-mixedcase
   function __HashiHandler_init_unchained(IExecutor executor) internal onlyInitializing {
     _executor = executor;
   }

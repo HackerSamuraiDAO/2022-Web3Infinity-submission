@@ -11,7 +11,7 @@ export const Wallet: React.FC = () => {
     <Box>
       <Button
         width="full"
-        variant={config.styles.button.variant}
+        variant="outline"
         rounded={config.styles.button.rounded}
         size={config.styles.button.size}
         fontSize={config.styles.button.fontSize}

@@ -11,6 +11,7 @@ contract MockHashiConnextAdapterExposure is HashiConnextAdapter {
     __HashiConnextAdapter_init(selfDomain, connext);
   }
 
+  // solhint-disable-next-line no-empty-blocks
   function testOnlyExecutor() public onlyExecutor {}
 
   function xcall(uint32 destinationdomain, bytes memory callData) public {

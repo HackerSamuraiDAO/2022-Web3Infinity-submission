@@ -1,6 +1,6 @@
 import Moralis from "moralis";
 
-import { ChainId } from "../../types/network";
+import { ChainId } from "../../../../shared/types/network";
 import { NFT } from "../../types/nft";
 
 const apiKey = process.env.MORALIS_API_KEY;
@@ -11,10 +11,7 @@ export const initMorarils = async () => {
   });
 };
 
-export const getNFTs = async (
-  chainId: ChainId,
-  address: string
-): Promise<NFT[]> => {
+export const getNFTs = async (chainId: ChainId, address: string): Promise<NFT[]> => {
   await initMorarils();
   const chain = `0x${chainId}`;
   const options = { chain, address };

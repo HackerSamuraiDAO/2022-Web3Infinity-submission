@@ -10,7 +10,7 @@ export const Header: React.FC = () => {
     <Box p="4" as="header">
       <Flex justify="space-between">
         <Text fontWeight={"bold"} color={config.styles.text.color}>
-          <Image src="/img/brands/logo.png" h={"8"} w={"8"} />
+          <Image src="/img/brands/logo.png" h={"8"} w={"8"} alt="logo" />
         </Text>
         <ConnectWalletWrapper>
           <Wallet />

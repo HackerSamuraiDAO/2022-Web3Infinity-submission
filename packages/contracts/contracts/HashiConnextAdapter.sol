@@ -52,11 +52,13 @@ abstract contract HashiConnextAdapter is Initializable, OwnableUpgradeable, ERC1
     return _bridgeContracts[domain];
   }
 
+  // solhint-disable-next-line func-name-mixedcase
   function __HashiConnextAdapter_init(uint32 selfDomain, address connext) internal onlyInitializing {
     __Ownable_init_unchained();
     __HashiConnextAdapter_init_unchained(selfDomain, connext);
   }
 
+  // solhint-disable-next-line func-name-mixedcase
   function __HashiConnextAdapter_init_unchained(uint32 selfDomain, address connext) internal onlyInitializing {
     _selfDomain = selfDomain;
     _connext = connext;
