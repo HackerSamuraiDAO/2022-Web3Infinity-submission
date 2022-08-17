@@ -3,8 +3,6 @@ import { task } from "hardhat/config";
 import networks from "../../shared/networks.json";
 import { isChainId } from "../../shared/types/network";
 
-const domainVersion = "0";
-
 task("register", "integration register").setAction(async (_, { network, run }) => {
   const { config } = network;
   const chainId = config.chainId?.toString();
@@ -23,7 +21,7 @@ task("register", "integration register").setAction(async (_, { network, run }) =
       const { domainId: opponentDomainNum, contracts } = value;
       const { bridge: opponentContractAddress } = contracts;
       const opponentDomain = opponentDomainNum.toString();
-      await run("sub-bridge-register", { selfContractAddress, opponentDomain, domainVersion, opponentContractAddress });
+      await run("sub-bridge-register", { selfContractAddress, opponentDomain, opponentContractAddress });
     }
   }
   console.log("DONE");

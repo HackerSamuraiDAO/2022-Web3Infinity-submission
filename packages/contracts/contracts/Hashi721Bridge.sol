@@ -16,7 +16,7 @@ import "hardhat/console.sol";
 
 //TODO: add domain check
 contract Hashi721Bridge is Initializable, ERC165Upgradeable, HashiConnextAdapter {
-  mapping(address => mapping(uint256 => uint32)) private _destinations;
+  // mapping(address => mapping(uint256 => uint32)) private _destinations;
   mapping(address => address) private _contracts;
   mapping(address => uint32) private _domains;
 
@@ -49,7 +49,7 @@ contract Hashi721Bridge is Initializable, ERC165Upgradeable, HashiConnextAdapter
       birthChainNFTContractAddress = processingNFTContractAddress;
       birthChainDomain = getSelfDomain();
       IERC721Upgradeable(birthChainNFTContractAddress).transferFrom(from, address(this), tokenId);
-      _destinations[processingNFTContractAddress][tokenId] = destinationDomain;
+      // _destinations[processingNFTContractAddress][tokenId] = destinationDomain;
     } else {
       birthChainNFTContractAddress = _contracts[processingNFTContractAddress];
       birthChainDomain = _domains[processingNFTContractAddress];
@@ -80,7 +80,7 @@ contract Hashi721Bridge is Initializable, ERC165Upgradeable, HashiConnextAdapter
       uint32 domain = _getOrigin(executor);
       // require(_destinations[birthChainNFTContractAddress][tokenId] == domain, "Hashi721Bridge: invalid bridge");
       IERC721Upgradeable(birthChainNFTContractAddress).safeTransferFrom(address(this), to, tokenId);
-      delete _destinations[birthChainNFTContractAddress][tokenId];
+      // delete _destinations[birthChainNFTContractAddress][tokenId];
     } else {
       bytes32 salt = keccak256(abi.encodePacked(birthChainDomain, birthChainNFTContractAddress));
       address processingNFTContractAddress = ClonesUpgradeable.predictDeterministicAddress(

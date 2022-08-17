@@ -4,7 +4,10 @@ import "./tasks/deploy";
 import "./tasks/register";
 import "./tasks/sub-bridge-deploy";
 import "./tasks/sub-bridge-register";
+import "./tasks/sub-executor-deploy";
+import "./tasks/sub-handler-deploy";
 import "./tasks/sub-wrapped-nft-impl-deploy";
+import "./tasks/verify";
 
 import * as dotenv from "dotenv";
 import { HardhatUserConfig } from "hardhat/config";
@@ -41,6 +44,12 @@ const config: HardhatUserConfig = {
   },
   typechain: {
     outDir: "../shared/types/typechain",
+  },
+  etherscan: {
+    apiKey: {
+      rinkeby: process.env.ETHERSCAN_API_KEY || "",
+      goerli: process.env.ETHERSCAN_API_KEY || "",
+    },
   },
 };
 

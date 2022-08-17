@@ -1,14 +1,11 @@
 import { task } from "hardhat/config";
 
-task("sub-executor-deploy", "cmd deploy bridge")
-  .addParam("executor", "self domain")
-  .addParam("connext", "connext")
-  .addParam("wrappedNftImplementation", "nft implementation")
-  .setAction(async ({ selfDomain, connext, wrappedNftImplementation }, { ethers }) => {
-    const Hashi721Bridge = await ethers.getContractFactory("ConnextHandler");
-    const hashi721Bridge = await Hashi721Bridge.deploy();
-    await hashi721Bridge.deployed();
-    await hashi721Bridge.initialize(selfDomain, connext, wrappedNftImplementation);
-    console.log("Deployed to: ", hashi721Bridge.address);
-    return hashi721Bridge.address;
-  });
+task("sub-executor-deploy", "cmd deploy bridge").setAction(async (_, { ethers }) => {
+  const name = "ConnextExecutor";
+  const ConnextExecutor = await ethers.getContractFactory(name);
+  const connextExecutor = await ConnextExecutor.deploy();
+  await connextExecutor.deployed();
+  await connextExecutor.initialize();
+  console.log(name, "deployed to:", connextExecutor.address);
+  return connextExecutor.address;
+});
