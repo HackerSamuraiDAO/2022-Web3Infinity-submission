@@ -58,7 +58,7 @@ export const Main: React.FC = () => {
       return;
     }
     console.log("checking network end");
-    const nftContract = new ethers.Contract(selectedNFT.contractAddress, erc721ABI, signer) as ERC721;
+    const nftContract = new ethers.Contract(selectedNFT.contractAddress, erc721ABI, signer);
     console.log("checking approval start...");
     const resolved = await Promise.all([
       nftContract.getApproved(selectedNFT.tokenId).catch(() => false),
@@ -77,7 +77,7 @@ export const Main: React.FC = () => {
     }
 
     console.log("checking approval end");
-    const bridge = new ethers.Contract(bridgeContractAddress, Hashi721BridgeArtifact.abi, signer) as Hashi721Bridge;
+    const bridge = new ethers.Contract(bridgeContractAddress, Hashi721BridgeArtifact.abi, signer);
 
     console.log("upload content to ipfs via NFT Storage...");
     const { data: cid } = await axios.post("/api/storage/add", {
