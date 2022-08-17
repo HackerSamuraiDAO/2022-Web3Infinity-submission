@@ -6,7 +6,7 @@ jobs:
   cron:
     runs-on: ubuntu-latest
     steps:
-      - name: Call Relayer
+      - name: Relayer Run
         run: |
           curl --request POST \
           --url 'https://nfthashi-2022-web3-infinity-submission.vercel.app/api/relayer/run' \
