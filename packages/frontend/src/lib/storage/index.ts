@@ -2,10 +2,10 @@ import axios from "axios";
 import { ethers } from "ethers";
 import { Blob, NFTStorage } from "nft.storage";
 
-import ERC721Artifact from "../../../../shared/artifacts/@openzeppelin/contracts/token/ERC721/ERC721.sol/ERC721.json";
-import networks from "../../../../shared/networks.json";
-import { ChainId } from "../../../../shared/types/network";
-import { ERC721 } from "../../../../shared/types/typechain";
+import ERC721Artifact from "../../../../contracts/artifacts/@openzeppelin/contracts/token/ERC721/ERC721.sol/ERC721.json";
+import networks from "../../../../contracts/networks.json";
+import { ChainId } from "../../../../contracts/types/network";
+import { ERC721 } from "../../../../contracts/types/typechain";
 
 /*
  * @dev currently nft storage api key is managed by env

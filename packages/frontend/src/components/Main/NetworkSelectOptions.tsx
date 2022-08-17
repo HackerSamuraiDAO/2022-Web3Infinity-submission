@@ -1,4 +1,4 @@
-import networks from "../../../../shared/networks.json";
+import networks from "../../../../contracts/networks.json";
 
 export const NetworkSelectOptions: React.FC = () => {
   return (

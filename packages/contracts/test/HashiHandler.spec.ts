@@ -1,8 +1,8 @@
 import { expect } from "chai";
 import { ethers } from "hardhat";
 
-import { HashiHandler } from "../../shared/types/typechain";
 import { ADDRESS_1, ADDRESS_2, NULL_ADDRESS } from "../lib/constant";
+import { HashiHandler } from "../types/typechain";
 
 describe("Unit Test for HashiHandler", function () {
   let hashiHandler: HashiHandler;

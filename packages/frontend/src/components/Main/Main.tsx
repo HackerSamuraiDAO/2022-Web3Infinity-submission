@@ -17,10 +17,9 @@ import React from "react";
 import { VscArrowSwap } from "react-icons/vsc";
 import { erc721ABI, useAccount, useNetwork, useSigner } from "wagmi";
 
-import Hashi721BridgeArtifact from "../../../../shared/artifacts/contracts/Hashi721Bridge.sol/Hashi721Bridge.json";
-import networks from "../../../../shared/networks.json";
-import { ChainId, isChainId } from "../../../../shared/types/network";
-import { ERC721, Hashi721Bridge } from "../../../../shared/types/typechain";
+import Hashi721BridgeArtifact from "../../../../contracts/artifacts/contracts/Hashi721Bridge.sol/Hashi721Bridge.json";
+import networks from "../../../../contracts/networks.json";
+import { ChainId, isChainId } from "../../../../contracts/types/network";
 import config from "../../../config.json";
 import { NFT as NFTType } from "../../types/nft";
 import { ConnectWalletWrapper } from "../ConnectWalletWrapper";

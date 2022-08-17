@@ -2,8 +2,8 @@ import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { expect } from "chai";
 import { ethers } from "hardhat";
 
-import { HashiExecutor, MockBridge } from "../../shared/types/typechain";
 import { ADDRESS_1, NULL_ADDRESS } from "../lib/constant";
+import { HashiExecutor, MockBridge } from "../types/typechain";
 
 describe("Unit Test for HashiExecutor", function () {
   let owner: SignerWithAddress;

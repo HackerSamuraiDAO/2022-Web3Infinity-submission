@@ -12,7 +12,7 @@ import "./tasks/verify";
 import * as dotenv from "dotenv";
 import { HardhatUserConfig } from "hardhat/config";
 
-import networks from "../shared/networks.json";
+import networks from "./networks.json";
 
 dotenv.config();
 
@@ -40,11 +40,8 @@ const config: HardhatUserConfig = {
       accounts,
     },
   },
-  paths: {
-    artifacts: "../shared/artifacts",
-  },
   typechain: {
-    outDir: "../shared/types/typechain",
+    outDir: "./types/typechain",
   },
   etherscan: {
     apiKey: {

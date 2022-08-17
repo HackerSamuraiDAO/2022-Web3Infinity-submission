@@ -1,10 +1,10 @@
 import { ethers } from "ethers";
 
-import Hashi721Bridge from "../../../../shared/artifacts/contracts/Hashi721Bridge.sol/Hashi721Bridge.json";
-import HashiExecutor from "../../../../shared/artifacts/contracts/HashiExecutor.sol/HashiExecutor.json";
-import HashiHandler from "../../../../shared/artifacts/contracts/HashiHandler.sol/HashiHandler.json";
-import networks from "../../../../shared/networks.json";
-import { ChainId } from "../../../../shared/types/network";
+import Hashi721Bridge from "../../../../contracts/artifacts/contracts/Hashi721Bridge.sol/Hashi721Bridge.json";
+import HashiExecutor from "../../../../contracts/artifacts/contracts/HashiExecutor.sol/HashiExecutor.json";
+import HashiHandler from "../../../../contracts/artifacts/contracts/HashiHandler.sol/HashiHandler.json";
+import networks from "../../../../contracts/networks.json";
+import { ChainId } from "../../../../contracts/types/network";
 import { add } from "../../lib/storage";
 
 const blockNumberRange = 100;

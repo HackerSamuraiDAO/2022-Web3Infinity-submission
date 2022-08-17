@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 
-import { isChainId } from "../../../../../shared/types/network";
+import { isChainId } from "../../../../../contracts/types/network";
 import { getNFTs } from "../../../lib/moralis";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {

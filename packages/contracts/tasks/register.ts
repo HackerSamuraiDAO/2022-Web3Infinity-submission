@@ -1,7 +1,7 @@
 import { task } from "hardhat/config";
 
-import networks from "../../shared/networks.json";
-import { isChainId } from "../../shared/types/network";
+import networks from "../networks.json";
+import { isChainId } from "../types/network";
 
 task("register", "integration register").setAction(async (_, { network, run }) => {
   const { config } = network;

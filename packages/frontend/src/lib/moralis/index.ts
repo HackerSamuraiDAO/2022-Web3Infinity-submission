@@ -1,6 +1,6 @@
 import Moralis from "moralis";
 
-import { ChainId } from "../../../../shared/types/network";
+import { ChainId } from "../../../../contracts/types/network";
 import { NFT } from "../../types/nft";
 
 const apiKey = process.env.MORALIS_API_KEY;

@@ -1,7 +1,7 @@
 import { task } from "hardhat/config";
 
-import networks from "../../shared/networks.json";
-import { isChainId } from "../../shared/types/network";
+import networks from "../networks.json";
+import { isChainId } from "../types/network";
 
 const ignore = ["faucet"];
 

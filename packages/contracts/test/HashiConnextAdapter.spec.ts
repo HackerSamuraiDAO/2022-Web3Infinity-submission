@@ -2,13 +2,13 @@ import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { expect } from "chai";
 import { ethers } from "hardhat";
 
+import { ADDRESS_1, ADDRESS_2 } from "../lib/constant";
 import {
   HashiExecutor,
   HashiExecutor__factory,
   HashiHandler,
   MockHashiConnextAdapterExposure,
-} from "../../shared/types/typechain";
-import { ADDRESS_1, ADDRESS_2 } from "../lib/constant";
+} from "../types/typechain";
 
 describe("Unit Test for HashiConnextAdapter", function () {
   let owner: SignerWithAddress;

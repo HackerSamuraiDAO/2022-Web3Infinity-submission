@@ -2,8 +2,8 @@ import fs from "fs";
 import { task } from "hardhat/config";
 import path from "path";
 
-import networks from "../../shared/networks.json";
-import { isChainId } from "../../shared/types/network";
+import networks from "../networks.json";
+import { isChainId } from "../types/network";
 
 task("deploy", "deploy").setAction(async (_, { network, run }) => {
   const { config } = network;
@@ -26,6 +26,6 @@ task("deploy", "deploy").setAction(async (_, { network, run }) => {
   networks[chainId].contracts.executor = executor;
   networks[chainId].contracts.handler = handler;
   networks[chainId].contracts.bridge = bridge;
-  fs.writeFileSync(path.join(__dirname, "../../shared/networks.json"), JSON.stringify(networks));
+  fs.writeFileSync(path.join(__dirname, "../networks.json"), JSON.stringify(networks));
   console.log("DONE");
 });
