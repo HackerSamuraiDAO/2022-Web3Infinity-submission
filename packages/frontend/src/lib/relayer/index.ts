@@ -112,29 +112,51 @@ export const run = async () => {
   const rinkebyExecutor = new ethers.Contract(rinkebyNetwork.contracts.executor, HashiExecutor.abi, rinkebySigner);
   const goerliExecutor = new ethers.Contract(goerliNetwork.contracts.executor, HashiExecutor.abi, goerliSigner);
 
-  const rinkebyTxPromises = validatedRinkebyProcessingEvent.map((processingEvent) => {
-    return goerliExecutor.execute(
+  const tx = [];
+  for (const processingEvent of validatedRinkebyProcessingEvent) {
+    const result = await goerliExecutor.execute(
       processingEvent.transactionHash,
       rinkebyNetwork.domain,
       rinkebyNetwork.contracts.bridge,
       goerliNetwork.contracts.bridge,
       processingEvent.args?.callData
     );
-  });
-  const goerliTxPromises = validatedGoerliProcessingEvent.map((processingEvent) => {
-    return rinkebyExecutor.execute(
+    tx.push(result);
+  }
+  for (const processingEvent of validatedGoerliProcessingEvent) {
+    const result = await rinkebyExecutor.execute(
       processingEvent.transactionHash,
-      goerliNetwork.domain,
-      goerliNetwork.contracts.bridge,
+      rinkebyNetwork.domain,
       rinkebyNetwork.contracts.bridge,
+      goerliNetwork.contracts.bridge,
       processingEvent.args?.callData
     );
-  });
-  const txPromises = [...rinkebyTxPromises, ...goerliTxPromises];
-  const tx = await Promise.all(txPromises);
+    tx.push(result);
+  }
 
   /*
    * @dev Return tx list for reference
    */
   return tx;
+};
+
+export const status = async (chainId: ChainId, hash: string) => {
+  const destinationChainId = chainId === "4" ? "5" : "4";
+  const destinationNetwork = networks[destinationChainId];
+  const provider = new ethers.providers.JsonRpcProvider(networks[destinationChainId].rpc);
+  const executor = new ethers.Contract(destinationNetwork.contracts.executor, HashiExecutor.abi, provider);
+  const blockNumber = await provider.getBlockNumber();
+  const executorFilter = executor.filters.Executed(hash);
+  const events = await executor.queryFilter(executorFilter, 0, blockNumber);
+  if (events.length === 0) {
+    return {
+      tx: "",
+      status: "no",
+    };
+  } else {
+    return {
+      tx: events[0].transactionHash,
+      status: "yes",
+    };
+  }
 };

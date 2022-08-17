@@ -10,20 +10,22 @@ export const truncate = (str: string | undefined, pre: number, post?: number) =>
   return `${str.substring(0, pre)}...${post ? str.substring(str.length - post) : ""}`;
 };
 
-export const getFromLocalStorageTxList = () => {
+export const getFromLocalStorageTxList = (chainId: string) => {
   const txListString = window.localStorage.getItem("txList");
   let txList;
   if (!txListString) {
-    txList = [];
+    txList = { [chainId]: [] };
   } else {
     txList = JSON.parse(txListString);
+    if (!txList[chainId]) {
+      txList[chainId] = [];
+    }
   }
-  txList = txList.filter((tx: string) => typeof tx === "string");
-  return txList as string[];
+  return txList;
 };
 
-export const addToLocalStorageTxList = (hash: string) => {
-  const txList = getFromLocalStorageTxList();
-  txList.push(hash);
+export const addToLocalStorageTxList = (chainId: string, hash: string) => {
+  const txList = getFromLocalStorageTxList(chainId);
+  txList[chainId].push(hash);
   window.localStorage.setItem("txList", JSON.stringify(txList));
 };

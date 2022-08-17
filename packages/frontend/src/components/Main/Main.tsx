@@ -109,7 +109,7 @@ export const Main: React.FC = () => {
       );
       clear();
       log("bridge tx sent", hash);
-      addToLocalStorageTxList(hash);
+      addToLocalStorageTxList(chain.id.toString(), hash);
     } catch (e: any) {
       error(e.message);
     } finally {
