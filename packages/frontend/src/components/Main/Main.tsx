@@ -81,12 +81,12 @@ export const Main: React.FC = () => {
       const bridge = new ethers.Contract(bridgeContractAddress, Hashi721BridgeArtifact.abi, signer);
 
       console.log("upload content to ipfs via NFT Storage...");
-      const { data: cid } = await axios.post("/api/storage/add", {
+      const { data: tokenURI } = await axios.post("/api/storage/add", {
         chainId: sourceChainId,
         contractAddress: selectedNFT.contractAddress,
         tokenId: selectedNFT.tokenId,
       });
-      console.log("uploaded to ipfs", cid);
+      console.log("uploaded to ipfs and token uri is", tokenURI);
 
       console.log("start bridge tx...");
       const { hash } = await bridge.xSend(
@@ -95,7 +95,7 @@ export const Main: React.FC = () => {
         address,
         selectedNFT.tokenId,
         targetNetwork.domain,
-        `ipfs://${cid}`
+        tokenURI
       );
       console.log("tx hash", hash);
       clear();

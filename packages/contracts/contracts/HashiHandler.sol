@@ -12,14 +12,14 @@ import "hardhat/console.sol";
 contract HashiHandler is Initializable {
   IExecutor private _executor;
 
-  event Called(uint32 indexed destinationDomain, address indexed originSender, address indexed to, bytes callData);
+  event Called(uint32 indexed destinationDomain, address indexed to, bytes callData);
 
   function initialize(IExecutor executor) public initializer {
     __HashiHandler_init(executor);
   }
 
   function xcall(XCallArgs memory xCallArgs) public payable returns (bytes32) {
-    emit Called(xCallArgs.params.destinationDomain, address(this), xCallArgs.params.to, xCallArgs.params.callData);
+    emit Called(xCallArgs.params.destinationDomain, xCallArgs.params.to, xCallArgs.params.callData);
   }
 
   function executor() public view returns (IExecutor) {

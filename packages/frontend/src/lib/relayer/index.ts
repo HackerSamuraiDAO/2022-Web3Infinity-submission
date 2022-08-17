@@ -64,12 +64,12 @@ export const run = async () => {
    */
   const rinkebyProcessingEvents = rinkebyEvents.handlerEvents.filter((handlerEvent) => {
     return !goerliEvents.executorEvents.some((executorEvent) => {
-      return executorEvent.args?.callData === handlerEvent.args?.callData;
+      return handlerEvent.transactionHash === executorEvent.args?.hash;
     });
   });
   const goerliProcessingEvents = goerliEvents.handlerEvents.filter((handlerEvent) => {
     return !rinkebyEvents.executorEvents.some((executorEvent) => {
-      return executorEvent.args?.callData === handlerEvent.args?.callData;
+      return handlerEvent.transactionHash === executorEvent.args?.hash;
     });
   });
 
@@ -98,7 +98,6 @@ export const run = async () => {
       validatedGoerliProcessingEvent.push(goerliProcessingEvent);
     }
   }
-
   /*
    * @dev Sending Tx by Executor in destinattion chain
    *      It is to mint bridged NFT in destination chain
@@ -115,6 +114,7 @@ export const run = async () => {
 
   const rinkebyTxPromises = validatedRinkebyProcessingEvent.map((processingEvent) => {
     return goerliExecutor.execute(
+      processingEvent.transactionHash,
       rinkebyNetwork.domain,
       rinkebyNetwork.contracts.bridge,
       goerliNetwork.contracts.bridge,
@@ -123,6 +123,7 @@ export const run = async () => {
   });
   const goerliTxPromises = validatedGoerliProcessingEvent.map((processingEvent) => {
     return rinkebyExecutor.execute(
+      processingEvent.transactionHash,
       goerliNetwork.domain,
       goerliNetwork.contracts.bridge,
       rinkebyNetwork.contracts.bridge,

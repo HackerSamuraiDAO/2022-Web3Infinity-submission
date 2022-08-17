@@ -31,7 +31,9 @@ export const getTokenMetadata = async (chainId: ChainId, contractAddress: string
   const erc721 = new ethers.Contract(contractAddress, ERC721Artifact.abi, provider);
   const tokenURI = await erc721.tokenURI(tokenId).catch(() => "");
   if (tokenURI) {
-    const { data } = await axios.get(tokenURI);
+    const { data } = await axios.get(tokenURI).catch(() => {
+      return { data: {} };
+    });
     return data;
   } else {
     return {};

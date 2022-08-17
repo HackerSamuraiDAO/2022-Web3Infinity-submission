@@ -46,6 +46,6 @@ describe("Unit Test for HashiHandler", function () {
 
     await expect(hashiHandler.xcall(xCallArgs))
       .to.emit(hashiHandler, "Called")
-      .withArgs(destinationDomain, hashiHandler.address, to, callData);
+      .withArgs(destinationDomain, to, callData);
   });
 });

@@ -24,7 +24,6 @@ export const NFT: React.FC<NFTProps> = ({ nft, onClick }) => {
             backgroundColor="gray.400"
             rounded="lg"
             fontSize="2xl"
-            // opacity="80%"
           >
             <Text fontSize="xs" noOfLines={1} color="white">
               {truncate(nft.metadata.name, 20)}
@@ -41,7 +40,6 @@ export const NFT: React.FC<NFTProps> = ({ nft, onClick }) => {
           backgroundColor="blue.400"
           rounded="2xl"
           fontSize="xs"
-          // opacity="80%"
         >
           <Text fontSize="xs" noOfLines={1} color="white">
             # {truncate(nft.tokenId, 10, 10)}

@@ -2,7 +2,7 @@ import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { expect } from "chai";
 import { ethers } from "hardhat";
 
-import { ADDRESS_1, NULL_ADDRESS } from "../lib/constant";
+import { ADDRESS_1, BYTE32_1, NULL_ADDRESS } from "../lib/constant";
 import { HashiExecutor, MockBridge } from "../types/typechain";
 
 describe("Unit Test for HashiExecutor", function () {
@@ -39,14 +39,18 @@ describe("Unit Test for HashiExecutor", function () {
     const originDomain = 1;
     const originSender = ADDRESS_1;
     await expect(
-      hashiExecutor.connect(malicious).execute(originDomain, originSender, mockBridge.address, successCalldata)
+      hashiExecutor
+        .connect(malicious)
+        .execute(BYTE32_1, originDomain, originSender, mockBridge.address, successCalldata)
     ).to.revertedWith("Ownable: caller is not the owner");
 
     await expect(
-      hashiExecutor.connect(owner).execute(originDomain, originSender, mockBridge.address, failCalldata)
+      hashiExecutor.connect(owner).execute(BYTE32_1, originDomain, originSender, mockBridge.address, failCalldata)
     ).to.revertedWith("HashiExecutor: execute failed");
 
-    await expect(hashiExecutor.connect(owner).execute(originDomain, originSender, mockBridge.address, successCalldata))
+    await expect(
+      hashiExecutor.connect(owner).execute(BYTE32_1, originDomain, originSender, mockBridge.address, successCalldata)
+    )
       .to.emit(mockBridge, "Called")
       .withArgs(originDomain, originSender);
   });

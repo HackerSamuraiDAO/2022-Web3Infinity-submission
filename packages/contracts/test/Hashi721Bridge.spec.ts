@@ -3,7 +3,7 @@ import { expect } from "chai";
 import { ethers } from "hardhat";
 
 // import { ADDRESS_1, ADDRESS_2, ADDRESS_3, NULL_ADDRESS } from "../lib/constant";
-import { ADDRESS_1, ADDRESS_2, NULL_ADDRESS } from "../lib/constant";
+import { ADDRESS_1, ADDRESS_2, BYTE32_1, NULL_ADDRESS } from "../lib/constant";
 import {
   Hashi721Bridge,
   HashiExecutor,
@@ -118,7 +118,7 @@ describe("Unit Test for Hashi721Bridge", function () {
     await expect(
       hashiExecutor
         .connect(owner)
-        .execute(selfDomain, selfBridgeContract, opponentHashi721Bridge.address, xReceiveDataAtOpponent_1)
+        .execute(BYTE32_1, selfDomain, selfBridgeContract, opponentHashi721Bridge.address, xReceiveDataAtOpponent_1)
     )
       .to.emit(depoloyedNFT, "Transfer")
       .withArgs(NULL_ADDRESS, sendTo.address, mintedTokenId_1);
@@ -134,7 +134,7 @@ describe("Unit Test for Hashi721Bridge", function () {
     await expect(
       hashiExecutor
         .connect(owner)
-        .execute(selfDomain, selfBridgeContract, opponentHashi721Bridge.address, xReceiveDataAtOpponent_2)
+        .execute(BYTE32_1, selfDomain, selfBridgeContract, opponentHashi721Bridge.address, xReceiveDataAtOpponent_2)
     )
       .to.emit(depoloyedNFT, "Transfer")
       .withArgs(NULL_ADDRESS, sendTo.address, mintedTokenId_2);
@@ -167,7 +167,7 @@ describe("Unit Test for Hashi721Bridge", function () {
     await expect(
       hashiExecutor
         .connect(owner)
-        .execute(selfDomain, selfBridgeContract, opponentHashi721Bridge.address, xReceiveDataAtOpponent_1)
+        .execute(BYTE32_1, selfDomain, selfBridgeContract, opponentHashi721Bridge.address, xReceiveDataAtOpponent_1)
     )
       .to.emit(depoloyedNFT, "Transfer")
       .withArgs(NULL_ADDRESS, sendTo.address, mintedTokenId_1);
@@ -190,7 +190,7 @@ describe("Unit Test for Hashi721Bridge", function () {
     await expect(
       hashiExecutor
         .connect(owner)
-        .execute(opponentDomain, opponentBridgeContract, selfHashi721Bridge.address, xReceiveDataAtSelf)
+        .execute(BYTE32_1, opponentDomain, opponentBridgeContract, selfHashi721Bridge.address, xReceiveDataAtSelf)
     )
       .to.emit(mockNFT, "Transfer")
       .withArgs(selfHashi721Bridge.address, holder.address, mintedTokenId_1);

@@ -2,7 +2,7 @@ import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { expect } from "chai";
 import { ethers } from "hardhat";
 
-import { ADDRESS_1, ADDRESS_2 } from "../lib/constant";
+import { ADDRESS_1, ADDRESS_2, BYTE32_1 } from "../lib/constant";
 import {
   HashiExecutor,
   HashiExecutor__factory,
@@ -68,7 +68,7 @@ describe("Unit Test for HashiConnextAdapter", function () {
     await mockHashiConnextAdapterExposure.connect(owner).setBridgeContract(opponentDomain, opponentBridgeContract);
     await hashiExecutor
       .connect(owner)
-      .execute(opponentDomain, opponentBridgeContract, mockHashiConnextAdapterExposure.address, sigHash);
+      .execute(BYTE32_1, opponentDomain, opponentBridgeContract, mockHashiConnextAdapterExposure.address, sigHash);
 
     const maliciousHashiExecutor = await HashiExecutor.deploy();
     await maliciousHashiExecutor.connect(owner).initialize();
@@ -76,13 +76,13 @@ describe("Unit Test for HashiConnextAdapter", function () {
     await expect(
       maliciousHashiExecutor
         .connect(owner)
-        .execute(opponentDomain, opponentBridgeContract, mockHashiConnextAdapterExposure.address, sigHash)
+        .execute(BYTE32_1, opponentDomain, opponentBridgeContract, mockHashiConnextAdapterExposure.address, sigHash)
     ).to.revertedWith("HashiExecutor: execute failed");
 
     await expect(
       hashiExecutor
         .connect(owner)
-        .execute(opponentDomain, maliciousOpponentContract, mockHashiConnextAdapterExposure.address, sigHash)
+        .execute(BYTE32_1, opponentDomain, maliciousOpponentContract, mockHashiConnextAdapterExposure.address, sigHash)
     ).to.revertedWith("HashiExecutor: execute failed");
   });
 
