@@ -73,7 +73,7 @@ export const Main: React.FC = () => {
       const targetNetwork = networks[targetChainId];
       const connectedChainId = chain.id.toString();
       if (connectedChainId !== sourceChainId) {
-        error("wrong network detected, please connect to", sorceNetwork.name);
+        error("wrong network detected, please connect to", sorceNetwork.name.toLowerCase());
         return;
       }
       const nftContract = new ethers.Contract(selectedNFT.contractAddress, erc721ABI, signer);
