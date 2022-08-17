@@ -7,7 +7,7 @@ import networks from "../../../../contracts/networks.json";
 import { ChainId } from "../../../../contracts/types/network";
 import { add } from "../../lib/storage";
 
-const blockNumberRange = 100;
+const blockNumberRange = 500;
 
 /*
  * @dev It is to convert domain id to chain id
