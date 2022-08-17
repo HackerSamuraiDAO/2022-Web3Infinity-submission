@@ -108,7 +108,7 @@ export const Main: React.FC = () => {
         tokenURI
       );
       clear();
-      log("bridge tx sent", hash);
+      log("bridge tx sent", hash, "you can check bridge status by clicking top-right wallet button");
       addToLocalStorageTxList(chain.id.toString(), hash);
     } catch (e: any) {
       error(e.message);
@@ -129,7 +129,13 @@ export const Main: React.FC = () => {
   };
 
   const mintNFTFromFaucet = async () => {
-    if (!signer) {
+    if (!chain || !signer) {
+      return;
+    }
+    const sorceNetwork = networks[sourceChainId];
+    const connectedChainId = chain.id.toString();
+    if (connectedChainId !== sourceChainId) {
+      alert(`wrong network detected, please connect to ${sorceNetwork.name.toLowerCase()}`);
       return;
     }
     const faucet = new ethers.Contract(networks[sourceChainId].contracts.faucet, HashiFaucetERC721Artifact.abi, signer);
@@ -138,11 +144,18 @@ export const Main: React.FC = () => {
   };
 
   const openSelectNFTModal = async () => {
-    if (!address) {
+    if (!chain || !address) {
       return;
     }
     setIsLoading(true);
     try {
+      const sorceNetwork = networks[sourceChainId];
+      const connectedChainId = chain.id.toString();
+      if (connectedChainId !== sourceChainId) {
+        error("wrong network detected, please connect to", sorceNetwork.name.toLowerCase());
+        return;
+      }
+
       log("selected", `${networks[sourceChainId].name.toLowerCase()},`, "loading nft from moralis api...");
       const { data } = await axios.get(`/api/nfts?chainId=${sourceChainId}&address=${address}`);
       setNFTs(data);
@@ -181,7 +194,7 @@ export const Main: React.FC = () => {
   const handleNFTSelected = async (index: number) => {
     setSelectedNFT(nfts[index]);
     closeModal();
-    log("nft is selected. it is going to be bridged to", "address", "at", "network.", "click bridge to proceed...");
+    log("nft is selected. click bridge to proceed...");
   };
 
   React.useEffect(() => {
