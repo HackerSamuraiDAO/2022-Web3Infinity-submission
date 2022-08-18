@@ -33,7 +33,7 @@ Following are the main contract developped in this hackathon.
 
 ## Inspiration
 
-We are trying to build the most secure and permission cross-chain NFT bridge supported by [Connext](https://www.connext.network/). We are a very active team and have a good community in the cross-chain space.
+We are trying to build the most secure and permissionless cross-chain NFT bridge supported by [Connext](https://www.connext.network/). We are a very active team and have a good community in the cross-chain space.
 
 [NFTHashi Twitter](https://twitter.com/nfthashi)
 
