@@ -87,7 +87,7 @@ export const Main: React.FC = () => {
       if (!approved) {
         log("not approved, confirm approve tx...");
         const tx = await nftContract.setApprovalForAll(bridgeContractAddress, true);
-        log("approve tx send", tx.hash, "waiting for tx confirmation...");
+        log("approve tx sent. waiting for tx confirmation...");
         await tx.wait();
       }
 
@@ -108,7 +108,9 @@ export const Main: React.FC = () => {
         tokenURI
       );
       clear();
-      log("bridge tx sent", hash, "you can check bridge status by clicking top-right wallet button");
+      log(
+        "bridge tx sent. it takes about 30-60m to complete cross-chain bridge, you can check status by clicking top-right wallet button. If you have feedback, please join discord at right bottom icon and talk to us."
+      );
       addToLocalStorageTxList(chain.id.toString(), hash);
     } catch (e: any) {
       error(e.message);
@@ -307,7 +309,7 @@ export const Main: React.FC = () => {
           </ConnectWalletWrapper>
         </Stack>
       </Box>
-      <Box shadow="base" borderRadius="md" p="4" h="24" backgroundColor={"gray.800"} opacity="90%">
+      <Box shadow="base" borderRadius="md" p="4" minH="24" backgroundColor={"gray.800"} opacity="90%">
         <Text color="blue.400" fontSize="xs">
           {`NFTHashi > `}
           {consoleText.map((text, i) => {

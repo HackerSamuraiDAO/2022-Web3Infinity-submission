@@ -1,5 +1,8 @@
-import { FaGithub } from "react-icons/fa";
+import { FaDiscord, FaGithub } from "react-icons/fa";
+import { HiOutlineDocumentText } from "react-icons/hi";
 
 export const icons = {
-  github: <FaGithub size="1.25rem" color="white" />,
+  doc: <HiOutlineDocumentText size="1rem" color="white" />,
+  discord: <FaDiscord size="1rem" color="white" />,
+  github: <FaGithub size="1rem" color="white" />,
 };

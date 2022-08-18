@@ -5,6 +5,12 @@
     "uri": "https://nfthashi-2022-web3-infinity-submission.vercel.app"
   },
   "links": {
+    "doc": {
+      "uri": "https://devpost.com/software/vnfts"
+    },
+    "discord": {
+      "uri": "https://discord.gg/TnQX6ZjN4Z"
+    },
     "github": {
       "uri": "https://github.com/nfthashi/2022-Web3Infinity-submission"
     }
